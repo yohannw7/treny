@@ -8,447 +8,367 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0d0d0d;
-    --surface: #161616;
-    --surface2: #1e1e1e;
-    --border: #2a2a2a;
-    --accent: #c8f135;
-    --accent-dim: rgba(200,241,53,0.12);
-    --text: #f0f0f0;
-    --muted: #6b6b6b;
-    --done: #3a3a3a;
+    --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
+    --border: #2a2a2a; --accent: #c8f135; --text: #f0f0f0; --muted: #6b6b6b;
   }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0 0 60px;
-  }
+  .layout { display: grid; grid-template-columns: 240px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
 
-  header {
-    padding: 28px 20px 0;
-    max-width: 680px;
-    margin: 0 auto;
+  .site-header {
+    grid-column: 1 / -1;
+    padding: 22px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-end; gap: 16px;
   }
+  .site-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 44px; letter-spacing: 2px; color: var(--accent); line-height: 1; }
+  .site-header p { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
 
-  header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    letter-spacing: 2px;
-    color: var(--accent);
-    line-height: 1;
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 18px 14px;
+    display: flex; flex-direction: column; gap: 14px;
+    position: sticky; top: 0;
+    height: calc(100vh - 69px);
+    overflow-y: auto; scrollbar-width: none;
   }
+  .sidebar::-webkit-scrollbar { display: none; }
 
-  header p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-    letter-spacing: 0.5px;
+  .clock-tabs { display: flex; gap: 4px; }
+  .clock-tab {
+    flex: 1; padding: 6px 8px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--muted); font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center;
   }
+  .clock-tab.active { background: var(--surface2); border-color: #444; color: var(--text); }
 
-  .tabs {
-    display: flex;
-    gap: 6px;
-    max-width: 680px;
-    margin: 24px auto 0;
-    padding: 0 20px;
-    overflow-x: auto;
-    scrollbar-width: none;
+  .clock-panel { display: none; }
+  .clock-panel.active { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .clock-display {
+    font-family: 'Bebas Neue', sans-serif; font-size: 62px;
+    letter-spacing: 3px; color: var(--accent); line-height: 1;
+    transition: color 0.3s; text-align: center;
   }
+  .clock-display.warning { color: #ff6b35; }
+  .clock-display.done { color: #ff3535; }
+
+  .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 100%; }
+  .preset-btn {
+    padding: 7px 4px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--muted);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer;
+    transition: all 0.15s; text-align: center;
+  }
+  .preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .clock-controls { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .ctrl-btn {
+    width: 100%; padding: 9px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .ctrl-btn.primary { background: var(--accent); border-color: var(--accent); color: #0d0d0d; }
+  .ctrl-btn:hover { opacity: 0.85; }
+  .ctrl-row { display: flex; gap: 6px; width: 100%; }
+  .ctrl-row .ctrl-btn { flex: 1; }
+
+  .laps-list { width: 100%; max-height: 110px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .lap-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 4px 0; border-bottom: 0.5px solid var(--border); }
+  .lap-row:last-child { border-bottom: none; }
+
+  .sidebar-divider { height: 1px; background: var(--border); }
+
+  .tips-box { border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 7px 7px 0; padding: 10px 11px; }
+  .tips-box p { font-size: 11px; color: var(--muted); line-height: 1.9; }
+  .tips-box strong { color: var(--text); font-weight: 500; }
+
+  .main { padding: 18px 22px 60px; }
+
+  .progress-wrap { margin-bottom: 14px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .progress-track { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; flex-wrap: wrap; }
   .tabs::-webkit-scrollbar { display: none; }
-
   .tab {
-    flex-shrink: 0;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    flex-shrink: 0; padding: 6px 13px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
   }
   .tab:hover { border-color: #444; color: var(--text); }
-  .tab.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #0d0d0d;
-  }
-
-  .days { max-width: 680px; margin: 16px auto 0; padding: 0 20px; }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: #0d0d0d; }
 
   .day { display: none; }
   .day.active { display: block; }
+  .day-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1.5px; margin-bottom: 2px; }
+  .day-sub { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
 
-  .day-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 30px;
-    letter-spacing: 1.5px;
-    margin-bottom: 4px;
-  }
-  .day-sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 16px;
-    letter-spacing: 0.4px;
-  }
-
-  .exercise {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    transition: border-color 0.2s;
-  }
+  .exercise { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; transition: border-color 0.2s; }
   .exercise.completed { border-color: #2a3a1a; background: #111a0a; }
-
-  .ex-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .ex-name {
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 1.3;
-  }
+  .ex-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+  .ex-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
   .exercise.completed .ex-name { color: var(--muted); text-decoration: line-through; }
+  .ex-target { font-size: 11px; color: var(--muted); white-space: nowrap; background: var(--surface2); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
 
-  .ex-target {
-    font-size: 12px;
-    color: var(--muted);
-    white-space: nowrap;
-    background: var(--surface2);
-    padding: 2px 8px;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-
-  .sets-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
+  .sets-row { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
   .set-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--muted);
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
+    width: 33px; height: 33px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
+    font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
   }
   .set-btn:hover { border-color: #555; color: var(--text); }
   .set-btn.done { background: var(--accent); border-color: var(--accent); color: #0d0d0d; font-weight: 500; }
 
   .weight-input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    width: 68px;
-    height: 36px;
-    padding: 0 8px;
-    text-align: center;
-    transition: border-color 0.15s;
-    margin-left: 4px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px;
+    width: 62px; height: 33px; padding: 0 8px; text-align: center;
+    transition: border-color 0.15s; margin-left: 3px;
   }
   .weight-input:focus { outline: none; border-color: var(--accent); }
   .weight-input::placeholder { color: var(--muted); }
-
-  .weight-label {
-    font-size: 11px;
-    color: var(--muted);
-    align-self: center;
-  }
-
-  .progress-bar-wrap {
-    max-width: 680px;
-    margin: 0 auto 0;
-    padding: 0 20px;
-    margin-top: 16px;
-  }
-
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .progress-track {
-    height: 3px;
-    background: var(--surface2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.3s ease;
-  }
+  .weight-label { font-size: 11px; color: var(--muted); align-self: center; }
 
   .reset-btn {
-    display: block;
-    margin: 24px auto 0;
-    padding: 10px 24px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
+    margin-top: 18px; padding: 8px 20px; background: transparent;
+    border: 1px solid var(--border); border-radius: 6px; color: var(--muted);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s;
   }
   .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
 
-  .tips {
-    max-width: 680px;
-    margin: 28px auto 0;
-    padding: 0 20px;
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+    .site-header { grid-column: 1; }
+    .sidebar { grid-row: 3; border-right: none; border-top: 1px solid var(--border); position: static; height: auto; }
+    .main { grid-row: 2; }
+    .tips-box { display: none; }
   }
-  .tips-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 2px solid var(--accent);
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-  }
-  .tips-box p { font-size: 13px; color: var(--muted); line-height: 1.7; }
-  .tips-box strong { color: var(--text); font-weight: 500; }
 </style>
 </head>
 <body>
+<div class="layout">
 
-<header>
-  <h1>ТРЕНИРОВКИ</h1>
-  <p>Набор массы · Дома · Гантели + Турник</p>
-</header>
+  <header class="site-header">
+    <h1>ТРЕНИРОВКИ</h1>
+    <p>Набор массы · Дома · Гантели + Турник</p>
+  </header>
 
-<div class="progress-bar-wrap">
-  <div class="progress-info">
-    <span id="prog-label">Прогресс сегодня</span>
-    <span id="prog-percent">0%</span>
-  </div>
-  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <aside class="sidebar">
+    <div class="clock-tabs">
+      <button class="clock-tab active" onclick="switchClock('timer')">Таймер</button>
+      <button class="clock-tab" onclick="switchClock('sw')">Секундомер</button>
+    </div>
+
+    <div class="clock-panel active" id="panel-timer">
+      <div class="clock-display" id="timer-display">01:30</div>
+      <div class="presets">
+        <button class="preset-btn" onclick="setTimer(60)">1 мин</button>
+        <button class="preset-btn" onclick="setTimer(90)">1:30</button>
+        <button class="preset-btn" onclick="setTimer(120)">2 мин</button>
+        <button class="preset-btn" onclick="setTimer(180)">3 мин</button>
+      </div>
+      <div class="clock-controls">
+        <button class="ctrl-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
+        <button class="ctrl-btn" onclick="resetTimer()">Сброс</button>
+      </div>
+    </div>
+
+    <div class="clock-panel" id="panel-sw">
+      <div class="clock-display" id="sw-display">00:00</div>
+      <div class="clock-controls">
+        <button class="ctrl-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
+        <div class="ctrl-row">
+          <button class="ctrl-btn" onclick="lapSW()">Круг</button>
+          <button class="ctrl-btn" onclick="resetSW()">Сброс</button>
+        </div>
+      </div>
+      <div class="laps-list" id="laps-list"></div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="tips-box">
+      <p>
+        <strong>Отдых:</strong> 90–120 сек базовые, 60 сек изоляция<br>
+        <strong>Прогрессия:</strong> +вес каждые 1–2 недели<br>
+        <strong>Белок:</strong> 1.6–2г / кг веса в день
+      </p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="prog-label">Прогресс сегодня</span>
+        <span id="prog-percent">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchDay(0)">Пн · Грудь/Трицепс</button>
+      <button class="tab" onclick="switchDay(1)">Ср · Спина/Бицепс</button>
+      <button class="tab" onclick="switchDay(2)">Пт · Ноги/Плечи</button>
+      <button class="tab" onclick="switchDay(3)">Сб · Полное тело</button>
+    </div>
+
+    <div class="day active" id="day-0">
+      <div class="day-title">ГРУДЬ / ТРИЦЕПС</div>
+      <div class="day-sub">Понедельник · 5 упражнений</div>
+      <div id="exercises-0"></div>
+    </div>
+    <div class="day" id="day-1">
+      <div class="day-title">СПИНА / БИЦЕПС</div>
+      <div class="day-sub">Среда · 5 упражнений</div>
+      <div id="exercises-1"></div>
+    </div>
+    <div class="day" id="day-2">
+      <div class="day-title">НОГИ / ПЛЕЧИ</div>
+      <div class="day-sub">Пятница · 5 упражнений</div>
+      <div id="exercises-2"></div>
+    </div>
+    <div class="day" id="day-3">
+      <div class="day-title">ПОЛНОЕ ТЕЛО</div>
+      <div class="day-sub">Суббота · 5 упражнений</div>
+      <div id="exercises-3"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetDay()">Сбросить день</button>
+  </main>
+
 </div>
-
-<div class="tabs">
-  <button class="tab active" onclick="switchDay(0)">Пн · Грудь/Трицепс</button>
-  <button class="tab" onclick="switchDay(1)">Ср · Спина/Бицепс</button>
-  <button class="tab" onclick="switchDay(2)">Пт · Ноги/Плечи</button>
-  <button class="tab" onclick="switchDay(3)">Сб · Полное тело</button>
-</div>
-
-<div class="days">
-
-  <div class="day active" id="day-0">
-    <div class="day-title">ГРУДЬ / ТРИЦЕПС</div>
-    <div class="day-sub">Понедельник · 5 упражнений</div>
-    <div id="exercises-0"></div>
-  </div>
-
-  <div class="day" id="day-1">
-    <div class="day-title">СПИНА / БИЦЕПС</div>
-    <div class="day-sub">Среда · 5 упражнений</div>
-    <div id="exercises-1"></div>
-  </div>
-
-  <div class="day" id="day-2">
-    <div class="day-title">НОГИ / ПЛЕЧИ</div>
-    <div class="day-sub">Пятница · 5 упражнений</div>
-    <div id="exercises-2"></div>
-  </div>
-
-  <div class="day" id="day-3">
-    <div class="day-title">ПОЛНОЕ ТЕЛО</div>
-    <div class="day-sub">Суббота · 5 упражнений</div>
-    <div id="exercises-3"></div>
-  </div>
-
-</div>
-
-<div style="max-width:680px;margin:0 auto;padding:0 20px;">
-  <button class="reset-btn" onclick="resetDay()">Сбросить день</button>
-</div>
-
-<div class="tips">
-  <div class="tips-box">
-    <p>
-      <strong>Отдых:</strong> 90–120 сек между базовыми, 60 сек между изолирующими &nbsp;·&nbsp;
-      <strong>Прогрессия:</strong> увеличивай вес или повторения каждые 1–2 недели &nbsp;·&nbsp;
-      <strong>Белок:</strong> 1.6–2г на кг веса в день
-    </p>
-  </div>
-</div>
-
 <script>
 const PLAN = [
-  {
-    exercises: [
-      { name: "Отжимания широкие", sets: 4, target: "12–15 повт." },
-      { name: "Жим гантелей лёжа на полу", sets: 4, target: "10–12 повт." },
-      { name: "Разводка гантелей лёжа", sets: 3, target: "12 повт." },
-      { name: "Отжимания узкие (трицепс)", sets: 3, target: "12 повт." },
-      { name: "Французский жим с гантелью", sets: 3, target: "12 повт." },
-    ]
-  },
-  {
-    exercises: [
-      { name: "Подтягивания широкие", sets: 4, target: "макс. повт." },
-      { name: "Подтягивания обратным хватом", sets: 4, target: "макс. повт." },
-      { name: "Тяга гантели в наклоне", sets: 4, target: "10–12 повт. / рука" },
-      { name: "Сгибания на бицепс", sets: 3, target: "12 повт." },
-      { name: "Молотковые сгибания", sets: 3, target: "12 повт." },
-    ]
-  },
-  {
-    exercises: [
-      { name: "Приседания с гантелями", sets: 4, target: "15 повт." },
-      { name: "Выпады с гантелями", sets: 3, target: "12 повт. / нога" },
-      { name: "Румынская тяга с гантелями", sets: 4, target: "12 повт." },
-      { name: "Жим гантелей сидя над головой", sets: 4, target: "12 повт." },
-      { name: "Подъём гантелей в стороны", sets: 3, target: "15 повт." },
-    ]
-  },
-  {
-    exercises: [
-      { name: "Подтягивания", sets: 5, target: "макс. повт." },
-      { name: "Отжимания с ногами на возвышении", sets: 4, target: "12 повт." },
-      { name: "Болгарские приседания с гантелями", sets: 3, target: "10 повт. / нога" },
-      { name: "Тяга гантелей к подбородку", sets: 3, target: "12 повт." },
-      { name: "Планка", sets: 3, target: "45–60 сек." },
-    ]
-  }
+  { exercises: [
+    { name: "Отжимания широкие", sets: 4, target: "12–15 повт." },
+    { name: "Жим гантелей лёжа на полу", sets: 4, target: "10–12 повт." },
+    { name: "Разводка гантелей лёжа", sets: 3, target: "12 повт." },
+    { name: "Отжимания узкие (трицепс)", sets: 3, target: "12 повт." },
+    { name: "Французский жим с гантелью", sets: 3, target: "12 повт." },
+  ]},
+  { exercises: [
+    { name: "Подтягивания широкие", sets: 4, target: "макс. повт." },
+    { name: "Подтягивания обратным хватом", sets: 4, target: "макс. повт." },
+    { name: "Тяга гантели в наклоне", sets: 4, target: "10–12 повт. / рука" },
+    { name: "Сгибания на бицепс", sets: 3, target: "12 повт." },
+    { name: "Молотковые сгибания", sets: 3, target: "12 повт." },
+  ]},
+  { exercises: [
+    { name: "Приседания с гантелями", sets: 4, target: "15 повт." },
+    { name: "Выпады с гантелями", sets: 3, target: "12 повт. / нога" },
+    { name: "Румынская тяга с гантелями", sets: 4, target: "12 повт." },
+    { name: "Жим гантелей сидя над головой", sets: 4, target: "12 повт." },
+    { name: "Подъём гантелей в стороны", sets: 3, target: "15 повт." },
+  ]},
+  { exercises: [
+    { name: "Подтягивания", sets: 5, target: "макс. повт." },
+    { name: "Отжимания с ногами на возвышении", sets: 4, target: "12 повт." },
+    { name: "Болгарские приседания с гантелями", sets: 3, target: "10 повт. / нога" },
+    { name: "Тяга гантелей к подбородку", sets: 3, target: "12 повт." },
+    { name: "Планка", sets: 3, target: "45–60 сек." },
+  ]},
 ];
 
 let currentDay = 0;
-
-function storageKey(day, exIdx) { return `wt_d${day}_e${exIdx}`; }
-function weightKey(day, exIdx) { return `wt_d${day}_e${exIdx}_w`; }
-
-function loadState(day, exIdx, sets) {
-  const raw = localStorage.getItem(storageKey(day, exIdx));
-  return raw ? JSON.parse(raw) : new Array(sets).fill(false);
-}
-
-function saveState(day, exIdx, state) {
-  localStorage.setItem(storageKey(day, exIdx), JSON.stringify(state));
-}
-
-function loadWeight(day, exIdx) {
-  return localStorage.getItem(weightKey(day, exIdx)) || '';
-}
-
-function saveWeight(day, exIdx, val) {
-  localStorage.setItem(weightKey(day, exIdx), val);
-}
+const sk = (d,e) => `wt_d${d}_e${e}`;
+const wk = (d,e) => `wt_d${d}_e${e}_w`;
+const loadSt = (d,e,n) => { const r = localStorage.getItem(sk(d,e)); return r ? JSON.parse(r) : new Array(n).fill(false); };
+const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
 
 function renderDay(day) {
-  const container = document.getElementById('exercises-' + day);
-  container.innerHTML = '';
+  const c = document.getElementById('exercises-' + day);
+  c.innerHTML = '';
   PLAN[day].exercises.forEach((ex, ei) => {
-    const state = loadState(day, ei, ex.sets);
-    const weight = loadWeight(day, ei);
-    const allDone = state.every(Boolean);
-
+    const state = loadSt(day, ei, ex.sets);
+    const weight = localStorage.getItem(wk(day,ei)) || '';
     const div = document.createElement('div');
-    div.className = 'exercise' + (allDone ? ' completed' : '');
-    div.id = 'ex-' + day + '-' + ei;
-
-    let setsHTML = '';
-    for (let s = 0; s < ex.sets; s++) {
-      setsHTML += `<button class="set-btn ${state[s] ? 'done' : ''}" onclick="toggleSet(${day},${ei},${s})" title="Подход ${s+1}">${s + 1}</button>`;
-    }
-
-    div.innerHTML = `
-      <div class="ex-top">
-        <span class="ex-name">${ex.name}</span>
-        <span class="ex-target">${ex.target}</span>
-      </div>
-      <div class="sets-row">
-        ${setsHTML}
-        <span class="weight-label">кг:</span>
-        <input class="weight-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
-          onchange="handleWeight(${day},${ei},this.value)" oninput="handleWeight(${day},${ei},this.value)">
-      </div>
-    `;
-    container.appendChild(div);
+    div.className = 'exercise' + (state.every(Boolean) ? ' completed' : '');
+    div.id = `ex-${day}-${ei}`;
+    let sh = '';
+    for (let s = 0; s < ex.sets; s++) sh += `<button class="set-btn${state[s]?' done':''}" onclick="toggleSet(${day},${ei},${s})">${s+1}</button>`;
+    div.innerHTML = `<div class="ex-top"><span class="ex-name">${ex.name}</span><span class="ex-target">${ex.target}</span></div>
+      <div class="sets-row">${sh}<span class="weight-label">кг:</span>
+        <input class="weight-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5" oninput="localStorage.setItem('${wk(day,ei)}',this.value)">
+      </div>`;
+    c.appendChild(div);
   });
   updateProgress(day);
 }
 
 function toggleSet(day, ei, s) {
-  const state = loadState(day, ei, PLAN[day].exercises[ei].sets);
-  state[s] = !state[s];
-  saveState(day, ei, state);
-  const allDone = state.every(Boolean);
-  const exEl = document.getElementById('ex-' + day + '-' + ei);
-  exEl.className = 'exercise' + (allDone ? ' completed' : '');
-  const btns = exEl.querySelectorAll('.set-btn');
-  btns.forEach((b, i) => {
-    b.className = 'set-btn' + (state[i] ? ' done' : '');
-  });
+  const state = loadSt(day, ei, PLAN[day].exercises[ei].sets);
+  state[s] = !state[s]; saveSt(day, ei, state);
+  const el = document.getElementById(`ex-${day}-${ei}`);
+  el.className = 'exercise' + (state.every(Boolean) ? ' completed' : '');
+  el.querySelectorAll('.set-btn').forEach((b,i) => b.className = 'set-btn' + (state[i] ? ' done' : ''));
   updateProgress(day);
 }
 
-function handleWeight(day, ei, val) {
-  saveWeight(day, ei, val);
-}
-
 function updateProgress(day) {
-  const exercises = PLAN[day].exercises;
   let total = 0, done = 0;
-  exercises.forEach((ex, ei) => {
-    const state = loadState(day, ei, ex.sets);
-    total += ex.sets;
-    done += state.filter(Boolean).length;
-  });
-  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  PLAN[day].exercises.forEach((ex,ei) => { const s = loadSt(day,ei,ex.sets); total += ex.sets; done += s.filter(Boolean).length; });
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('prog-percent').textContent = pct + '%';
-  document.getElementById('prog-label').textContent = done + ' / ' + total + ' подходов';
+  document.getElementById('prog-label').textContent = `${done} / ${total} подходов`;
 }
 
 function switchDay(day) {
   currentDay = day;
-  document.querySelectorAll('.day').forEach((d, i) => d.classList.toggle('active', i === day));
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === day));
+  document.querySelectorAll('.day').forEach((d,i) => d.classList.toggle('active', i===day));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===day));
   updateProgress(day);
 }
 
 function resetDay() {
   if (!confirm('Сбросить прогресс этого дня?')) return;
-  PLAN[currentDay].exercises.forEach((ex, ei) => {
-    localStorage.removeItem(storageKey(currentDay, ei));
-  });
+  PLAN[currentDay].exercises.forEach((_,ei) => localStorage.removeItem(sk(currentDay,ei)));
   renderDay(currentDay);
 }
 
-PLAN.forEach((_, i) => renderDay(i));
+PLAN.forEach((_,i) => renderDay(i));
 updateProgress(0);
+
+// Clock
+function switchClock(mode) {
+  document.querySelectorAll('.clock-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='timer')||(i===1&&mode==='sw')));
+  document.getElementById('panel-timer').classList.toggle('active', mode==='timer');
+  document.getElementById('panel-sw').classList.toggle('active', mode==='sw');
+}
+
+let timerTotal=90, timerLeft=90, timerInt=null, timerOn=false;
+const fmt = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function setTimer(s) { resetTimer(); timerTotal=s; timerLeft=s; document.getElementById('timer-display').textContent=fmt(s); document.getElementById('timer-display').className='clock-display'; }
+function toggleTimer() {
+  if (timerOn) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; return; }
+  if (timerLeft<=0) timerLeft=timerTotal;
+  timerOn=true; document.getElementById('timer-btn').textContent='Пауза';
+  timerInt = setInterval(()=>{
+    timerLeft--;
+    const d = document.getElementById('timer-display');
+    d.textContent = fmt(timerLeft);
+    d.className = 'clock-display'+(timerLeft<=10&&timerLeft>0?' warning':timerLeft<=0?' done':'');
+    if (timerLeft<=0) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; }
+  }, 1000);
+}
+function resetTimer() { clearInterval(timerInt); timerOn=false; timerLeft=timerTotal; document.getElementById('timer-display').textContent=fmt(timerTotal); document.getElementById('timer-display').className='clock-display'; document.getElementById('timer-btn').textContent='Старт'; }
+
+let swMs=0, swInt=null, swOn=false, swLaps=[];
+const fmtSW = ms => { const s=Math.floor(ms/1000),m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'.'+String(Math.floor((ms%1000)/10)).padStart(2,'0'); };
+function toggleSW() {
+  if (swOn) { clearInterval(swInt); swOn=false; document.getElementById('sw-btn').textContent='Старт'; return; }
+  const start=Date.now()-swMs; swOn=true; document.getElementById('sw-btn').textContent='Пауза';
+  swInt=setInterval(()=>{ swMs=Date.now()-start; document.getElementById('sw-display').textContent=fmtSW(swMs); },30);
+}
+function lapSW() { if(!swOn&&swMs===0) return; swLaps.unshift({n:swLaps.length+1,t:fmtSW(swMs)}); document.getElementById('laps-list').innerHTML=swLaps.map(l=>`<div class="lap-row"><span>Круг ${l.n}</span><span>${l.t}</span></div>`).join(''); }
+function resetSW() { clearInterval(swInt); swOn=false; swMs=0; swLaps=[]; document.getElementById('sw-display').textContent='00:00'; document.getElementById('sw-btn').textContent='Старт'; document.getElementById('laps-list').innerHTML=''; }
 </script>
 </body>
 </html>
