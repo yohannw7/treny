@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренировки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --accent: #c8f135;
+    --accent-dim: rgba(200,241,53,0.12);
+    --text: #f0f0f0;
+    --muted: #6b6b6b;
+    --done: #3a3a3a;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  header {
+    padding: 28px 20px 0;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    max-width: 680px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { border-color: #444; color: var(--text); }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0d0d0d;
+  }
+
+  .days { max-width: 680px; margin: 16px auto 0; padding: 0 20px; }
+
+  .day { display: none; }
+  .day.active { display: block; }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+  .day-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    letter-spacing: 0.4px;
+  }
+
+  .exercise {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .exercise.completed { border-color: #2a3a1a; background: #111a0a; }
+
+  .ex-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .ex-name {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .exercise.completed .ex-name { color: var(--muted); text-decoration: line-through; }
+
+  .ex-target {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .sets-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .set-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .set-btn:hover { border-color: #555; color: var(--text); }
+  .set-btn.done { background: var(--accent); border-color: var(--accent); color: #0d0d0d; font-weight: 500; }
+
+  .weight-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    width: 68px;
+    height: 36px;
+    padding: 0 8px;
+    text-align: center;
+    transition: border-color 0.15s;
+    margin-left: 4px;
+  }
+  .weight-input:focus { outline: none; border-color: var(--accent); }
+  .weight-input::placeholder { color: var(--muted); }
+
+  .weight-label {
+    font-size: 11px;
+    color: var(--muted);
+    align-self: center;
+  }
+
+  .progress-bar-wrap {
+    max-width: 680px;
+    margin: 0 auto 0;
+    padding: 0 20px;
+    margin-top: 16px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .reset-btn {
+    display: block;
+    margin: 24px auto 0;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+  .tips {
+    max-width: 680px;
+    margin: 28px auto 0;
+    padding: 0 20px;
+  }
+  .tips-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+  }
+  .tips-box p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .tips-box strong { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ТРЕНИРОВКИ</h1>
+  <p>Набор массы · Дома · Гантели + Турник</p>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span id="prog-label">Прогресс сегодня</span>
+    <span id="prog-percent">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchDay(0)">Пн · Грудь/Трицепс</button>
+  <button class="tab" onclick="switchDay(1)">Ср · Спина/Бицепс</button>
+  <button class="tab" onclick="switchDay(2)">Пт · Ноги/Плечи</button>
+  <button class="tab" onclick="switchDay(3)">Сб · Полное тело</button>
+</div>
+
+<div class="days">
+
+  <div class="day active" id="day-0">
+    <div class="day-title">ГРУДЬ / ТРИЦЕПС</div>
+    <div class="day-sub">Понедельник · 5 упражнений</div>
+    <div id="exercises-0"></div>
+  </div>
+
+  <div class="day" id="day-1">
+    <div class="day-title">СПИНА / БИЦЕПС</div>
+    <div class="day-sub">Среда · 5 упражнений</div>
+    <div id="exercises-1"></div>
+  </div>
+
+  <div class="day" id="day-2">
+    <div class="day-title">НОГИ / ПЛЕЧИ</div>
+    <div class="day-sub">Пятница · 5 упражнений</div>
+    <div id="exercises-2"></div>
+  </div>
+
+  <div class="day" id="day-3">
+    <div class="day-title">ПОЛНОЕ ТЕЛО</div>
+    <div class="day-sub">Суббота · 5 упражнений</div>
+    <div id="exercises-3"></div>
+  </div>
+
+</div>
+
+<div style="max-width:680px;margin:0 auto;padding:0 20px;">
+  <button class="reset-btn" onclick="resetDay()">Сбросить день</button>
+</div>
+
+<div class="tips">
+  <div class="tips-box">
+    <p>
+      <strong>Отдых:</strong> 90–120 сек между базовыми, 60 сек между изолирующими &nbsp;·&nbsp;
+      <strong>Прогрессия:</strong> увеличивай вес или повторения каждые 1–2 недели &nbsp;·&nbsp;
+      <strong>Белок:</strong> 1.6–2г на кг веса в день
+    </p>
+  </div>
+</div>
+
+<script>
+const PLAN = [
+  {
+    exercises: [
+      { name: "Отжимания широкие", sets: 4, target: "12–15 повт." },
+      { name: "Жим гантелей лёжа на полу", sets: 4, target: "10–12 повт." },
+      { name: "Разводка гантелей лёжа", sets: 3, target: "12 повт." },
+      { name: "Отжимания узкие (трицепс)", sets: 3, target: "12 повт." },
+      { name: "Французский жим с гантелью", sets: 3, target: "12 повт." },
+    ]
+  },
+  {
+    exercises: [
+      { name: "Подтягивания широкие", sets: 4, target: "макс. повт." },
+      { name: "Подтягивания обратным хватом", sets: 4, target: "макс. повт." },
+      { name: "Тяга гантели в наклоне", sets: 4, target: "10–12 повт. / рука" },
+      { name: "Сгибания на бицепс", sets: 3, target: "12 повт." },
+      { name: "Молотковые сгибания", sets: 3, target: "12 повт." },
+    ]
+  },
+  {
+    exercises: [
+      { name: "Приседания с гантелями", sets: 4, target: "15 повт." },
+      { name: "Выпады с гантелями", sets: 3, target: "12 повт. / нога" },
+      { name: "Румынская тяга с гантелями", sets: 4, target: "12 повт." },
+      { name: "Жим гантелей сидя над головой", sets: 4, target: "12 повт." },
+      { name: "Подъём гантелей в стороны", sets: 3, target: "15 повт." },
+    ]
+  },
+  {
+    exercises: [
+      { name: "Подтягивания", sets: 5, target: "макс. повт." },
+      { name: "Отжимания с ногами на возвышении", sets: 4, target: "12 повт." },
+      { name: "Болгарские приседания с гантелями", sets: 3, target: "10 повт. / нога" },
+      { name: "Тяга гантелей к подбородку", sets: 3, target: "12 повт." },
+      { name: "Планка", sets: 3, target: "45–60 сек." },
+    ]
+  }
+];
+
+let currentDay = 0;
+
+function storageKey(day, exIdx) { return `wt_d${day}_e${exIdx}`; }
+function weightKey(day, exIdx) { return `wt_d${day}_e${exIdx}_w`; }
+
+function loadState(day, exIdx, sets) {
+  const raw = localStorage.getItem(storageKey(day, exIdx));
+  return raw ? JSON.parse(raw) : new Array(sets).fill(false);
+}
+
+function saveState(day, exIdx, state) {
+  localStorage.setItem(storageKey(day, exIdx), JSON.stringify(state));
+}
+
+function loadWeight(day, exIdx) {
+  return localStorage.getItem(weightKey(day, exIdx)) || '';
+}
+
+function saveWeight(day, exIdx, val) {
+  localStorage.setItem(weightKey(day, exIdx), val);
+}
+
+function renderDay(day) {
+  const container = document.getElementById('exercises-' + day);
+  container.innerHTML = '';
+  PLAN[day].exercises.forEach((ex, ei) => {
+    const state = loadState(day, ei, ex.sets);
+    const weight = loadWeight(day, ei);
+    const allDone = state.every(Boolean);
+
+    const div = document.createElement('div');
+    div.className = 'exercise' + (allDone ? ' completed' : '');
+    div.id = 'ex-' + day + '-' + ei;
+
+    let setsHTML = '';
+    for (let s = 0; s < ex.sets; s++) {
+      setsHTML += `<button class="set-btn ${state[s] ? 'done' : ''}" onclick="toggleSet(${day},${ei},${s})" title="Подход ${s+1}">${s + 1}</button>`;
+    }
+
+    div.innerHTML = `
+      <div class="ex-top">
+        <span class="ex-name">${ex.name}</span>
+        <span class="ex-target">${ex.target}</span>
+      </div>
+      <div class="sets-row">
+        ${setsHTML}
+        <span class="weight-label">кг:</span>
+        <input class="weight-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
+          onchange="handleWeight(${day},${ei},this.value)" oninput="handleWeight(${day},${ei},this.value)">
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  updateProgress(day);
+}
+
+function toggleSet(day, ei, s) {
+  const state = loadState(day, ei, PLAN[day].exercises[ei].sets);
+  state[s] = !state[s];
+  saveState(day, ei, state);
+  const allDone = state.every(Boolean);
+  const exEl = document.getElementById('ex-' + day + '-' + ei);
+  exEl.className = 'exercise' + (allDone ? ' completed' : '');
+  const btns = exEl.querySelectorAll('.set-btn');
+  btns.forEach((b, i) => {
+    b.className = 'set-btn' + (state[i] ? ' done' : '');
+  });
+  updateProgress(day);
+}
+
+function handleWeight(day, ei, val) {
+  saveWeight(day, ei, val);
+}
+
+function updateProgress(day) {
+  const exercises = PLAN[day].exercises;
+  let total = 0, done = 0;
+  exercises.forEach((ex, ei) => {
+    const state = loadState(day, ei, ex.sets);
+    total += ex.sets;
+    done += state.filter(Boolean).length;
+  });
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-percent').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = done + ' / ' + total + ' подходов';
+}
+
+function switchDay(day) {
+  currentDay = day;
+  document.querySelectorAll('.day').forEach((d, i) => d.classList.toggle('active', i === day));
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === day));
+  updateProgress(day);
+}
+
+function resetDay() {
+  if (!confirm('Сбросить прогресс этого дня?')) return;
+  PLAN[currentDay].exercises.forEach((ex, ei) => {
+    localStorage.removeItem(storageKey(currentDay, ei));
+  });
+  renderDay(currentDay);
+}
+
+PLAN.forEach((_, i) => renderDay(i));
+updateProgress(0);
+</script>
+</body>
+</html>
