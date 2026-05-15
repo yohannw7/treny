@@ -10,18 +10,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #100720;
+  --bg: #0d0818;
   --glass: rgba(255,255,255,0.06);
   --glass-h: rgba(255,255,255,0.10);
-  --border: rgba(255,255,255,0.11);
-  --border-h: rgba(185,127,255,0.45);
-  --accent: #b97fff;
-  --accent2: #dbb8ff;
-  --glow: rgba(185,127,255,0.3);
-  --text: #f0eaff;
-  --muted: rgba(220,200,255,0.42);
-  --done: rgba(185,127,255,0.22);
-  --done-b: rgba(185,127,255,0.5);
+  --border: rgba(255,180,150,0.13);
+  --border-h: rgba(255,120,100,0.5);
+  --accent: #ff7e5f;
+  --accent2: #ffb347;
+  --glow: rgba(255,100,80,0.35);
+  --text: #fff0ea;
+  --muted: rgba(255,220,200,0.42);
+  --done: rgba(255,100,80,0.18);
+  --done-b: rgba(255,140,100,0.5);
   --r-xl: 28px;
   --r-lg: 20px;
   --r-md: 14px;
@@ -40,16 +40,16 @@ body {
 
 /* Blobs */
 .blob { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
-.blob-1 { width: 700px; height: 500px; top: -200px; left: -200px; background: radial-gradient(ellipse, rgba(120,60,200,0.28) 0%, transparent 70%); }
-.blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: radial-gradient(ellipse, rgba(160,80,240,0.22) 0%, transparent 70%); }
-.blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: radial-gradient(ellipse, rgba(185,127,255,0.1) 0%, transparent 65%); }
+.blob-1 { width: 700px; height: 500px; top: -200px; left: -200px; background: radial-gradient(ellipse, rgba(180,40,120,0.32) 0%, transparent 70%); }
+.blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: radial-gradient(ellipse, rgba(255,100,50,0.22) 0%, transparent 70%); }
+.blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: radial-gradient(ellipse, rgba(255,160,80,0.1) 0%, transparent 65%); }
 
 /* Background symbols */
 .bg-symbols { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .bg-sym {
   position: absolute;
   font-family: 'Bebas Neue', sans-serif;
-  color: rgba(200,150,255,0.9);
+  color: rgba(255,160,100,0.9);
   user-select: none;
   line-height: 1;
   animation: symFloat ease-in-out infinite;
@@ -70,7 +70,7 @@ body {
 .header-left h1 {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 52px; letter-spacing: 4px; line-height: 1;
-  background: linear-gradient(120deg, #fff 0%, var(--accent2) 100%);
+  background: linear-gradient(120deg, #fff 0%, #ffb347 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .header-left p { font-size: 12px; color: var(--muted); margin-top: 3px; letter-spacing: 0.4px; }
@@ -88,7 +88,7 @@ body {
 }
 .day-pill:hover { background: var(--glass-h); color: var(--text); border-color: rgba(255,255,255,0.2); }
 .day-pill.active {
-  background: linear-gradient(135deg, rgba(185,127,255,0.32), rgba(130,70,220,0.32));
+  background: linear-gradient(135deg, rgba(255,126,95,0.32), rgba(200,60,60,0.32));
   border-color: var(--border-h);
   color: #fff;
   box-shadow: 0 2px 18px var(--glow);
@@ -127,7 +127,7 @@ body {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px;
-  background: linear-gradient(135deg, #fff, var(--accent2));
+  background: linear-gradient(135deg, #fff, #ffb347);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .prog-text h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
@@ -139,7 +139,7 @@ body {
 }
 .prog-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #8040d0, var(--accent2));
+  background: linear-gradient(90deg, #c0392b, #ff7e5f, #ffb347);
   border-radius: var(--r-pill);
   transition: width 0.4s ease;
   box-shadow: 0 0 12px var(--glow);
@@ -165,8 +165,8 @@ body {
   cursor: pointer; transition: all 0.2s; text-align: center;
 }
 .timer-mode-btn.active {
-  background: rgba(185,127,255,0.25);
-  color: var(--accent2);
+  background: rgba(255,126,95,0.25);
+  color: #ffb347;
   box-shadow: 0 1px 8px var(--glow);
 }
 
@@ -181,7 +181,7 @@ body {
 }
 .timer-digits {
   font-family: 'Bebas Neue', sans-serif; font-size: 44px; letter-spacing: 3px; line-height: 1;
-  background: linear-gradient(135deg, #fff, var(--accent2));
+  background: linear-gradient(135deg, #fff, #ffb347);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   transition: filter 0.3s;
 }
@@ -209,7 +209,7 @@ body {
 }
 .t-btn:hover { background: var(--glass-h); }
 .t-btn.primary {
-  background: linear-gradient(135deg, rgba(185,127,255,0.35), rgba(120,60,210,0.35));
+  background: linear-gradient(135deg, rgba(255,126,95,0.38), rgba(200,60,60,0.38));
   border-color: var(--border-h); color: #fff;
   box-shadow: 0 3px 20px var(--glow);
 }
@@ -238,7 +238,7 @@ body {
 .day-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
 .day-name {
   font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px;
-  background: linear-gradient(120deg, #fff, var(--accent2));
+  background: linear-gradient(120deg, #fff, #ffb347);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .day-count { font-size: 12px; color: var(--muted); }
@@ -286,7 +286,7 @@ body {
 }
 .set-dot:hover { border-color: var(--accent); color: var(--accent2); background: rgba(185,127,255,0.1); }
 .set-dot.done {
-  background: linear-gradient(135deg, rgba(185,127,255,0.5), rgba(120,60,210,0.5));
+  background: linear-gradient(135deg, rgba(255,126,95,0.55), rgba(255,179,71,0.45));
   border-color: rgba(185,127,255,0.7);
   color: #fff; font-weight: 600;
   box-shadow: 0 2px 10px var(--glow);
@@ -368,12 +368,12 @@ body {
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#8040d0"/>
-      <stop offset="100%" stop-color="#dbb8ff"/>
+      <stop offset="0%" stop-color="#ff7e5f"/>
+      <stop offset="100%" stop-color="#ffb347"/>
     </linearGradient>
     <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#9050e0"/>
-      <stop offset="100%" stop-color="#dbb8ff"/>
+      <stop offset="0%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#ffb347"/>
     </linearGradient>
   </defs>
 </svg>
