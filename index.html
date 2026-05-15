@@ -761,6 +761,23 @@ body {
 }
 .t-row { display: flex; gap: 5px; }
 .t-row .t-btn { flex: 1; }
+.timer-presets { display: flex; gap: 4px; flex-wrap: wrap; width: 100%; justify-content: center; }
+.timer-preset-btn {
+  padding: 4px 10px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: rgba(0,0,0,0.03);
+  color: var(--muted); font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 500; cursor: pointer; transition: all 0.18s;
+}
+.timer-preset-btn:hover { background: var(--glass-h); color: var(--text); border-color: var(--accent); }
+.timer-preset-btn.active { background: var(--timer-mode-active-bg); color: var(--timer-mode-active-color); border-color: var(--border-h); }
+.timer-set-row { display: flex; gap: 4px; align-items: center; width: 100%; }
+.timer-set-inp {
+  flex: 1; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--input-bg);
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; text-align: center; min-width: 0;
+}
+.timer-set-inp:focus { outline: none; border-color: var(--accent); }
 .laps-box { width: 100%; max-height: 70px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .lap-item { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); padding: 3px 2px; border-bottom: 0.5px solid var(--border); }
 .lap-item:last-child { border-bottom: none; }
@@ -1074,7 +1091,7 @@ body {
           <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
           <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
         </div>
-        <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+        <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%">
           <div class="timer-ring-wrap">
             <svg width="130" height="130" viewBox="0 0 130 130">
               <circle class="tr-bg" cx="65" cy="65" r="55"/>
@@ -1089,6 +1106,20 @@ body {
           <div class="timer-controls">
             <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
             <button class="t-btn" onclick="resetTimer()">Сброс</button>
+          </div>
+          <div class="timer-presets" id="timerPresets">
+            <button class="timer-preset-btn" onclick="setTimer(30)">0:30</button>
+            <button class="timer-preset-btn active" onclick="setTimer(60)">1:00</button>
+            <button class="timer-preset-btn" onclick="setTimer(90)">1:30</button>
+            <button class="timer-preset-btn" onclick="setTimer(120)">2:00</button>
+            <button class="timer-preset-btn" onclick="setTimer(180)">3:00</button>
+            <button class="timer-preset-btn" onclick="setTimer(300)">5:00</button>
+          </div>
+          <div class="timer-set-row">
+            <input type="number" class="timer-set-inp" id="timerSetMin" value="1" min="0" max="99" placeholder="мин">
+            <span style="color:var(--muted);font-size:12px">:</span>
+            <input type="number" class="timer-set-inp" id="timerSetSec" value="30" min="0" max="59" placeholder="сек">
+            <button class="t-btn" style="flex:none;padding:6px 14px;font-size:11px" onclick="applyTimerSet()">OK</button>
           </div>
         </div>
         <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
@@ -1751,7 +1782,18 @@ const CIRC_T = 345.6;
 let timerTotal=90, timerLeft=90, timerInt=null, timerOn=false;
 const fmt = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 function updateTimerRing() { document.getElementById('timer-ring').style.strokeDashoffset = CIRC_T - (CIRC_T * timerLeft/timerTotal); }
-function setTimer(s) { resetTimer(); timerTotal=s; timerLeft=s; document.getElementById('timer-display').textContent=fmt(s); document.getElementById('timer-display').className='timer-digits'; updateTimerRing(); }
+function setTimer(s) { resetTimer(); timerTotal=s; timerLeft=s; document.getElementById('timer-display').textContent=fmt(s); document.getElementById('timer-display').className='timer-digits'; updateTimerRing();
+  document.querySelectorAll('.timer-preset-btn').forEach(b => { b.classList.toggle('active', parseInt(b.getAttribute('onclick').match(/\d+/)[0]) === s); });
+  document.getElementById('timerSetMin').value = Math.floor(s/60);
+  document.getElementById('timerSetSec').value = s%60;
+}
+function applyTimerSet() {
+  const m = parseInt(document.getElementById('timerSetMin').value) || 0;
+  const s = parseInt(document.getElementById('timerSetSec').value) || 0;
+  const total = m*60 + s;
+  if (total < 1) { alert('Минимум 1 секунда'); return; }
+  setTimer(total);
+}
 function toggleTimer() {
   if (timerOn) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; return; }
   if (timerLeft<=0) timerLeft=timerTotal;
