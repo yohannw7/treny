@@ -2,1427 +2,376 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Тренировки</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Panel</title>
+
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg: #0a0a0f;
-  --glass: rgba(255,255,255,0.04);
-  --glass-h: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --border-h: rgba(255,255,255,0.2);
-  --accent: #888;
-  --accent2: #aaa;
-  --glow: rgba(150,150,150,0.2);
-  --text: #c8c8cc;
-  --muted: rgba(200,200,210,0.5);
-  --done: rgba(255,255,255,0.08);
-  --done-b: rgba(255,255,255,0.2);
-  --r-xl: 24px;
-  --r-lg: 18px;
-  --r-md: 12px;
-  --r-pill: 999px;
-  --blur: blur(20px);
-  --blob-1: radial-gradient(ellipse, rgba(80,80,100,0.25) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(100,100,120,0.18) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(120,120,140,0.08) 0%, transparent 65%);
-  --sym-color: rgba(200,200,220,0.7);
-  --ring-grad-1: #888;
-  --ring-grad-2: #aaa;
-  --timer-grad-1: #999;
-  --timer-grad-2: #bbb;
-  --prog-bar-grad: linear-gradient(90deg, #555, #888, #aaa);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(200,200,200,0.12));
-  --title-grad: linear-gradient(120deg, #fff 0%, #aaa 100%);
-  --pct-grad: linear-gradient(135deg, #fff, #aaa);
-  --streak-num-grad: linear-gradient(135deg, #fff, #aaa);
-  --day-name-grad: linear-gradient(120deg, #fff, #aaa);
-  --timer-digits-grad: linear-gradient(135deg, #fff, #aaa);
-  --timer-digits-warn: linear-gradient(135deg,#e0e0e0,#b0b0b0);
-  --timer-digits-done: linear-gradient(135deg,#c0c0c0,#909090);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(39,174,96,0.1));
-  --complete-day-btn-border: rgba(46,204,113,0.3);
-  --complete-day-btn-color: #2ecc71;
-  --save-preset-btn-bg: rgba(255,255,255,0.05);
-  --save-preset-btn-border: rgba(255,255,255,0.15);
-  --save-preset-btn-color: #aaa;
-  --reset-pill-bg: rgba(255,80,80,0.05);
-  --reset-pill-border: rgba(255,100,100,0.12);
-  --reset-pill-color: rgba(255,150,150,0.5);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(200,200,200,0.25), rgba(150,150,150,0.2));
-  --t-btn-primary-border: rgba(200,200,200,0.3);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(255,255,255,0.15);
-  --timer-mode-active-color: #ccc;
-  --card-shadow: none;
-  --set-dot-done-bg: linear-gradient(135deg, rgba(255,126,95,0.55), rgba(255,179,71,0.45));
-  --input-bg: rgba(0,0,0,0.2);
-  --page-padding: 20px;
-  --bento-cols: 1fr 1fr 280px;
-  --gap: 12px;
-  --h1-size: 58px;
-  --h1-spacing: 5px;
-  --streak-block-padding: 6px 6px 6px 16px;
-  --prog-gap: 20px;
-  --prog-padding: 20px 22px;
-  --timer-padding: 20px 16px;
-  --timer-ring-size: 130px;
-  --timer-digits-size: 36px;
-  --ex-padding: 18px 20px 14px;
-  --day-name-size: 26px;
-  --ex-card-padding: 10px 14px;
-  --ex-card-gap: 3px 10px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
 }
 
-/* Themes — оставляю как было */
-.theme-fire {
-  --bg: #0d0818;
-  --glass: rgba(255,255,255,0.06);
-  --glass-h: rgba(255,255,255,0.10);
-  --border: rgba(255,180,150,0.13);
-  --border-h: rgba(255,120,100,0.5);
-  --accent: #ff7e5f;
-  --accent2: #ffb347;
-  --glow: rgba(255,100,80,0.35);
-  --text: #fff0ea;
-  --muted: rgba(255,220,200,0.42);
-  --done: rgba(255,100,80,0.18);
-  --done-b: rgba(255,140,100,0.5);
-  --blob-1: radial-gradient(ellipse, rgba(180,40,120,0.32) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(255,100,50,0.22) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(255,160,80,0.1) 0%, transparent 65%);
-  --sym-color: rgba(255,160,100,0.9);
-  --ring-grad-1: #ff7e5f;
-  --ring-grad-2: #ffb347;
-  --timer-grad-1: #ff6b6b;
-  --timer-grad-2: #ffb347;
-  --prog-bar-grad: linear-gradient(90deg, #c0392b, #ff7e5f, #ffb347);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(255,126,95,0.32), rgba(200,60,60,0.32));
-  --title-grad: linear-gradient(120deg, #fff 0%, #ffb347 100%);
-  --pct-grad: linear-gradient(135deg, #fff, #ffb347);
-  --streak-num-grad: linear-gradient(135deg, #fff, #ffb347);
-  --day-name-grad: linear-gradient(120deg, #fff, #ffb347);
-  --timer-digits-grad: linear-gradient(135deg, #fff, #ffb347);
-  --timer-digits-warn: linear-gradient(135deg,#ffa07a,#ff6b35);
-  --timer-digits-done: linear-gradient(135deg,#ff9090,#ff4444);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(39,174,96,0.15));
-  --complete-day-btn-border: rgba(46,204,113,0.35);
-  --complete-day-btn-color: #2ecc71;
-  --save-preset-btn-bg: rgba(255,180,80,0.08);
-  --save-preset-btn-border: rgba(255,180,80,0.2);
-  --save-preset-btn-color: var(--accent2);
-  --reset-pill-bg: rgba(255,80,80,0.07);
-  --reset-pill-border: rgba(255,100,100,0.18);
-  --reset-pill-color: rgba(255,150,150,0.6);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(255,126,95,0.38), rgba(200,60,60,0.38));
-  --t-btn-primary-border: var(--border-h);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(255,126,95,0.25);
-  --timer-mode-active-color: #ffb347;
-}
-
-.theme-aqua {
-  --bg: #06181d;
-  --glass: rgba(255,255,255,0.05);
-  --glass-h: rgba(255,255,255,0.09);
-  --border: rgba(100,200,220,0.14);
-  --border-h: rgba(80,200,220,0.5);
-  --accent: #4dd4e0;
-  --accent2: #7ee8f5;
-  --glow: rgba(70,200,220,0.3);
-  --text: #e0f5f8;
-  --muted: rgba(180,230,240,0.45);
-  --done: rgba(60,180,200,0.2);
-  --done-b: rgba(80,200,220,0.5);
-  --blob-1: radial-gradient(ellipse, rgba(20,120,150,0.3) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(30,160,180,0.2) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(60,200,200,0.1) 0%, transparent 65%);
-  --sym-color: rgba(100,210,230,0.8);
-  --ring-grad-1: #4dd4e0;
-  --ring-grad-2: #7ee8f5;
-  --timer-grad-1: #4dd4e0;
-  --timer-grad-2: #7ee8f5;
-  --prog-bar-grad: linear-gradient(90deg, #1a7a8a, #4dd4e0, #7ee8f5);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(70,200,220,0.3), rgba(40,140,160,0.3));
-  --title-grad: linear-gradient(120deg, #fff 0%, #7ee8f5 100%);
-  --pct-grad: linear-gradient(135deg, #fff, #7ee8f5);
-  --streak-num-grad: linear-gradient(135deg, #fff, #7ee8f5);
-  --day-name-grad: linear-gradient(120deg, #fff, #7ee8f5);
-  --timer-digits-grad: linear-gradient(135deg, #fff, #7ee8f5);
-  --timer-digits-warn: linear-gradient(135deg,#a0e8f0,#5dcbd8);
-  --timer-digits-done: linear-gradient(135deg,#90d8e0,#48b8c8);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(46,204,180,0.2), rgba(39,174,150,0.15));
-  --complete-day-btn-border: rgba(46,204,180,0.35);
-  --complete-day-btn-color: #2eccb4;
-  --save-preset-btn-bg: rgba(100,220,240,0.08);
-  --save-preset-btn-border: rgba(100,220,240,0.2);
-  --save-preset-btn-color: var(--accent2);
-  --reset-pill-bg: rgba(255,100,100,0.05);
-  --reset-pill-border: rgba(255,100,100,0.12);
-  --reset-pill-color: rgba(255,150,150,0.5);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(70,210,225,0.35), rgba(50,160,180,0.3));
-  --t-btn-primary-border: var(--border-h);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(70,200,220,0.25);
-  --timer-mode-active-color: #7ee8f5;
-}
-
-.theme-forest {
-  --bg: #0a120c;
-  --glass: rgba(255,255,255,0.05);
-  --glass-h: rgba(255,255,255,0.09);
-  --border: rgba(100,200,130,0.13);
-  --border-h: rgba(80,200,110,0.5);
-  --accent: #4ecc6e;
-  --accent2: #7ef58e;
-  --glow: rgba(70,200,100,0.3);
-  --text: #e0f8e4;
-  --muted: rgba(180,230,190,0.45);
-  --done: rgba(60,180,90,0.2);
-  --done-b: rgba(80,200,110,0.5);
-  --blob-1: radial-gradient(ellipse, rgba(20,120,60,0.3) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(30,150,70,0.2) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(60,180,80,0.1) 0%, transparent 65%);
-  --sym-color: rgba(100,210,130,0.8);
-  --ring-grad-1: #4ecc6e;
-  --ring-grad-2: #7ef58e;
-  --timer-grad-1: #4ecc6e;
-  --timer-grad-2: #7ef58e;
-  --prog-bar-grad: linear-gradient(90deg, #1a6e2a, #4ecc6e, #7ef58e);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(70,200,100,0.3), rgba(40,150,60,0.3));
-  --title-grad: linear-gradient(120deg, #fff 0%, #7ef58e 100%);
-  --pct-grad: linear-gradient(135deg, #fff, #7ef58e);
-  --streak-num-grad: linear-gradient(135deg, #fff, #7ef58e);
-  --day-name-grad: linear-gradient(120deg, #fff, #7ef58e);
-  --timer-digits-grad: linear-gradient(135deg, #fff, #7ef58e);
-  --timer-digits-warn: linear-gradient(135deg,#a0f0b0,#5dd878);
-  --timer-digits-done: linear-gradient(135deg,#90e8a0,#48c868);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(39,174,96,0.15));
-  --complete-day-btn-border: rgba(46,204,113,0.35);
-  --complete-day-btn-color: #2ecc71;
-  --save-preset-btn-bg: rgba(100,220,130,0.08);
-  --save-preset-btn-border: rgba(100,220,130,0.2);
-  --save-preset-btn-color: var(--accent2);
-  --reset-pill-bg: rgba(255,100,100,0.05);
-  --reset-pill-border: rgba(255,100,100,0.12);
-  --reset-pill-color: rgba(255,150,150,0.5);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(70,200,100,0.35), rgba(50,160,70,0.3));
-  --t-btn-primary-border: var(--border-h);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(70,200,100,0.25);
-  --timer-mode-active-color: #7ef58e;
-}
-
-.theme-violet {
-  --bg: #100a1a;
-  --glass: rgba(255,255,255,0.06);
-  --glass-h: rgba(255,255,255,0.10);
-  --border: rgba(180,140,255,0.15);
-  --border-h: rgba(160,100,255,0.5);
-  --accent: #9b6dff;
-  --accent2: #c4a3ff;
-  --glow: rgba(140,80,255,0.35);
-  --text: #f0e8ff;
-  --muted: rgba(210,190,250,0.45);
-  --done: rgba(120,80,220,0.2);
-  --done-b: rgba(140,100,240,0.5);
-  --blob-1: radial-gradient(ellipse, rgba(80,20,180,0.3) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(100,40,200,0.22) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(140,80,220,0.1) 0%, transparent 65%);
-  --sym-color: rgba(160,120,240,0.8);
-  --ring-grad-1: #9b6dff;
-  --ring-grad-2: #c4a3ff;
-  --timer-grad-1: #9b6dff;
-  --timer-grad-2: #c4a3ff;
-  --prog-bar-grad: linear-gradient(90deg, #5a2d9a, #9b6dff, #c4a3ff);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(140,90,255,0.32), rgba(100,50,200,0.32));
-  --title-grad: linear-gradient(120deg, #fff 0%, #c4a3ff 100%);
-  --pct-grad: linear-gradient(135deg, #fff, #c4a3ff);
-  --streak-num-grad: linear-gradient(135deg, #fff, #c4a3ff);
-  --day-name-grad: linear-gradient(120deg, #fff, #c4a3ff);
-  --timer-digits-grad: linear-gradient(135deg, #fff, #c4a3ff);
-  --timer-digits-warn: linear-gradient(135deg,#d0c0ff,#b090f0);
-  --timer-digits-done: linear-gradient(135deg,#c0a8f0,#a080e0);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(39,174,96,0.15));
-  --complete-day-btn-border: rgba(46,204,113,0.35);
-  --complete-day-btn-color: #2ecc71;
-  --save-preset-btn-bg: rgba(180,150,255,0.08);
-  --save-preset-btn-border: rgba(180,150,255,0.2);
-  --save-preset-btn-color: var(--accent2);
-  --reset-pill-bg: rgba(255,80,80,0.07);
-  --reset-pill-border: rgba(255,100,100,0.18);
-  --reset-pill-color: rgba(255,150,150,0.6);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(150,100,255,0.35), rgba(110,60,220,0.3));
-  --t-btn-primary-border: var(--border-h);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(140,90,255,0.25);
-  --timer-mode-active-color: #c4a3ff;
-}
-
-.theme-liquid {
-  --bg: #f0f2f5;
-  --glass: rgba(255,255,255,0.55);
-  --glass-h: rgba(255,255,255,0.75);
-  --border: rgba(0,0,0,0.06);
-  --border-h: rgba(99,102,241,0.4);
-  --accent: #6366f1;
-  --accent2: #818cf8;
-  --glow: rgba(99,102,241,0.2);
-  --text: #1e1b2e;
-  --muted: rgba(30,27,46,0.45);
-  --done: rgba(99,102,241,0.12);
-  --done-b: rgba(99,102,241,0.35);
-  --blob-1: radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%);
-  --blob-2: radial-gradient(ellipse, rgba(168,85,247,0.10) 0%, transparent 70%);
-  --blob-3: radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 65%);
-  --sym-color: rgba(99,102,241,0.15);
-  --ring-grad-1: #6366f1;
-  --ring-grad-2: #818cf8;
-  --timer-grad-1: #6366f1;
-  --timer-grad-2: #a78bfa;
-  --prog-bar-grad: linear-gradient(90deg, #6366f1, #818cf8, #a78bfa);
-  --day-pill-active-bg: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
-  --title-grad: linear-gradient(120deg, #1e1b2e 0%, #6366f1 100%);
-  --pct-grad: linear-gradient(135deg, #1e1b2e, #6366f1);
-  --streak-num-grad: linear-gradient(135deg, #1e1b2e, #6366f1);
-  --day-name-grad: linear-gradient(120deg, #1e1b2e, #6366f1);
-  --timer-digits-grad: linear-gradient(135deg, #1e1b2e, #6366f1);
-  --timer-digits-warn: linear-gradient(135deg,#ef4444,#dc2626);
-  --timer-digits-done: linear-gradient(135deg,#f87171,#ef4444);
-  --complete-day-btn-bg: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(22,163,74,0.1));
-  --complete-day-btn-border: rgba(34,197,94,0.35);
-  --complete-day-btn-color: #16a34a;
-  --save-preset-btn-bg: rgba(99,102,241,0.06);
-  --save-preset-btn-border: rgba(99,102,241,0.18);
-  --save-preset-btn-color: #6366f1;
-  --reset-pill-bg: rgba(239,68,68,0.06);
-  --reset-pill-border: rgba(239,68,68,0.15);
-  --reset-pill-color: rgba(239,68,68,0.55);
-  --t-btn-primary-bg: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.2));
-  --t-btn-primary-border: var(--border-h);
-  --t-btn-primary-color: #fff;
-  --timer-mode-active-bg: rgba(99,102,241,0.15);
-  --timer-mode-active-color: #6366f1;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-  --set-dot-done-bg: linear-gradient(135deg, rgba(99,102,241,0.5), rgba(139,92,246,0.45));
-  --input-bg: rgba(0,0,0,0.04);
-}
-
-html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  transition: background 0.4s, color 0.4s;
-  -webkit-font-smoothing: antialiased;
+    background: #0b0b0b;
+    color: white;
+    padding: 20px;
 }
 
-.blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; transition: background 0.5s; }
-.blob-1 { width: 700px; height: 500px; top: -200px; left: -200px; background: var(--blob-1); }
-.blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: var(--blob-2); }
-.blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: var(--blob-3); }
-
-.bg-symbols { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.bg-sym {
-  position: absolute;
-  font-family: 'Bebas Neue', sans-serif;
-  user-select: none;
-  line-height: 1;
-  animation: symFloat ease-in-out infinite;
-  transition: color 0.4s;
-}
-@keyframes symFloat {
-  0%,100% { transform: translateY(0) rotate(var(--r0)); }
-  50%      { transform: translateY(-16px) rotate(var(--r1)); }
+.set-panel {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 28px;
+    padding: 22px;
+    max-width: 430px;
+    margin: 0 auto;
+    box-shadow: 0 0 30px rgba(255,255,255,0.03);
 }
 
-.page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: var(--page-padding); }
-
-.settings-btn {
-  position: fixed; top: 16px; right: 20px; z-index: 50;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.25s;
-  box-shadow: var(--card-shadow);
-}
-.settings-btn:hover { border-color: var(--accent); color: var(--accent2); background: var(--glass-h); }
-
-.top-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 18px; gap: 16px; flex-wrap: wrap;
-}
-.brand-block { display: flex; align-items: baseline; gap: 12px; }
-.brand-block h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: var(--h1-size); letter-spacing: var(--h1-spacing); line-height: 1;
-  background: var(--title-grad);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.brand-badge {
-  font-size: 11px; color: var(--muted);
-  border: 1px solid var(--border);
-  padding: 4px 12px; border-radius: var(--r-pill);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  background: var(--glass);
-  white-space: nowrap;
+.exercise-title {
+    font-size: 26px;
+    font-weight: 700;
 }
 
-.streak-days-block {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--border);
-  border-radius: var(--r-pill);
-  padding: var(--streak-block-padding);
-  flex-wrap: wrap;
-  box-shadow: var(--card-shadow);
-}
-.streak-mini { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.streak-mini .icon { font-size: 18px; animation: pulse 1.5s ease infinite; }
-@keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
-.streak-mini .num {
-  font-family: 'Bebas Neue', sans-serif; font-size: 22px;
-  background: var(--streak-num-grad);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  line-height: 1;
-}
-.day-pills { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
-.day-pill {
-  padding: 7px 14px; border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.05);
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all 0.22s; white-space: nowrap;
-  display: flex; align-items: center; gap: 6px;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.day-pill:hover { background: var(--glass-h); color: var(--text); border-color: var(--accent); }
-.day-pill.active {
-  background: var(--day-pill-active-bg);
-  border-color: var(--border-h);
-  color: #fff;
-  box-shadow: 0 2px 18px var(--glow);
-}
-.day-pill .del-day { font-size: 13px; color: var(--muted); cursor: pointer; line-height: 1; transition: color 0.2s; padding: 2px; }
-.day-pill .del-day:hover { color: #ef4444; }
-.add-day-btn {
-  width: 32px; height: 32px; border-radius: 50%;
-  border: 1px dashed var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-size: 18px; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-.add-day-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(255,255,255,0.05); }
-
-.bento {
-  display: grid;
-  grid-template-columns: var(--bento-cols);
-  grid-template-rows: auto auto;
-  gap: var(--gap);
+.exercise-sub {
+    margin-top: 6px;
+    color: rgba(255,255,255,0.45);
+    font-size: 14px;
 }
 
-.card {
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.4s;
-  box-shadow: var(--card-shadow);
-}
-.card:hover { border-color: var(--border-h); }
-
-.card-progress {
-  grid-column: 1 / 3;
-  padding: var(--prog-padding);
-  display: flex; align-items: center; gap: var(--prog-gap);
-}
-.prog-ring-wrap { flex-shrink: 0; position: relative; width: 70px; height: 70px; }
-.prog-ring-wrap svg { transform: rotate(-90deg); }
-.prog-ring-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
-.prog-ring-fill { fill: none; stroke: url(#ringGrad); stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
-.prog-center {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px;
-  background: var(--pct-grad);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.prog-text h3 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
-.prog-text p { font-size: 12px; color: var(--muted); }
-.prog-bar-wrap { flex: 1; min-width: 0; }
-.prog-bar-track {
-  height: 5px; background: rgba(0,0,0,0.05);
-  border-radius: var(--r-pill); overflow: hidden; margin-bottom: 6px;
-}
-.prog-bar-fill {
-  height: 100%;
-  background: var(--prog-bar-grad);
-  border-radius: var(--r-pill);
-  transition: width 0.4s ease;
-  box-shadow: 0 0 12px var(--glow);
-}
-.prog-stats { display: flex; gap: 16px; flex-wrap: wrap; }
-.prog-stat { font-size: 11px; color: var(--muted); }
-.prog-stat span { color: var(--text); font-weight: 500; }
-
-.card-timer {
-  grid-column: 3;
-  grid-row: 1 / 3;
-  padding: var(--timer-padding);
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-}
-.timer-mode { display: flex; background: rgba(0,0,0,0.05); border-radius: var(--r-pill); padding: 3px; gap: 0; width: 100%; }
-.timer-mode-btn {
-  flex: 1; padding: 6px 8px; border-radius: var(--r-pill);
-  border: none; background: transparent; color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
-  cursor: pointer; transition: all 0.2s; text-align: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.timer-mode-btn.active {
-  background: var(--timer-mode-active-bg);
-  color: var(--timer-mode-active-color);
-  box-shadow: 0 1px 8px var(--glow);
-}
-.timer-ring-wrap { position: relative; width: var(--timer-ring-size); height: var(--timer-ring-size); flex-shrink: 0; }
-.timer-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-.tr-bg { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 6; }
-.tr-fill { fill: none; stroke: url(#timerGrad); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.9s linear; }
-.timer-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
-.timer-digits {
-  font-family: 'Bebas Neue', sans-serif; font-size: var(--timer-digits-size); letter-spacing: 2px; line-height: 1;
-  background: var(--timer-digits-grad);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  transition: filter 0.3s;
-}
-.timer-digits.warning { background: var(--timer-digits-warn); -webkit-background-clip:text; background-clip:text; filter: drop-shadow(0 0 8px rgba(239,68,68,0.5)); }
-.timer-digits.done { background: var(--timer-digits-done); -webkit-background-clip:text; background-clip:text; }
-.timer-label { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
-.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 100%; }
-.preset-pill {
-  padding: 6px 4px; border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.03);
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: 11px;
-  cursor: pointer; transition: all 0.2s; text-align: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.preset-pill:hover { border-color: var(--accent); color: var(--accent2); background: rgba(255,255,255,0.05); }
-.timer-controls { display: flex; flex-direction: column; gap: 5px; width: 100%; }
-.t-btn {
-  width: 100%; padding: 9px; border-radius: var(--r-lg);
-  border: 1px solid var(--border); background: rgba(0,0,0,0.03);
-  color: var(--text); font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.22s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.t-btn:hover { background: var(--glass-h); }
-.t-btn.primary {
-  background: var(--t-btn-primary-bg);
-  border-color: var(--t-btn-primary-border);
-  color: var(--t-btn-primary-color);
-  box-shadow: 0 3px 20px var(--glow);
-}
-.t-btn.primary:hover { box-shadow: 0 4px 28px var(--glow); }
-.t-row { display: flex; gap: 5px; }
-.t-row .t-btn { flex: 1; }
-.laps-box { width: 100%; max-height: 70px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-.lap-item { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); padding: 3px 2px; border-bottom: 0.5px solid var(--border); }
-.lap-item:last-child { border-bottom: none; }
-
-.card-exercises { padding: var(--ex-padding); grid-column: 1 / 3; }
-.day-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.day-name {
-  font-family: 'Bebas Neue', sans-serif; font-size: var(--day-name-size); letter-spacing: 2px;
-  background: var(--day-name-grad);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.day-count { font-size: 11px; color: var(--muted); }
-.edit-day-btn {
-  background: none; border: 1px solid var(--border);
-  color: var(--muted); cursor: pointer; padding: 3px 10px; border-radius: var(--r-pill);
-  font-size: 12px; transition: all 0.2s;
-  margin-left: auto;
-  -webkit-tap-highlight-color: transparent;
-}
-.edit-day-btn:hover { border-color: var(--accent); color: var(--accent2); }
-
-.exercise-list { display: flex; flex-direction: column; gap: 6px; }
-.ex-card {
-  background: rgba(0,0,0,0.02);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: var(--ex-card-padding);
-  transition: background 0.2s, border-color 0.2s;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: var(--ex-card-gap);
-  align-items: center;
-}
-.ex-card:hover { background: var(--glass-h); }
-.ex-card.completed { background: var(--done); border-color: var(--done-b); }
-.ex-name { font-size: 13px; font-weight: 500; grid-column: 1; grid-row: 1; }
-.ex-card.completed .ex-name { color: var(--muted); text-decoration: line-through; }
-.ex-target {
-  font-size: 10px; color: var(--muted);
-  background: rgba(0,0,0,0.03);
-  border: 1px solid var(--border);
-  padding: 2px 8px; border-radius: var(--r-pill);
-  grid-column: 2; grid-row: 1;
-  white-space: nowrap; align-self: start;
-}
-.ex-controls { grid-column: 1; grid-row: 2; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-.ex-weight { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 4px; }
-.set-dot {
-  width: 28px; height: 28px; border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.05);
-  color: var(--muted);
-  font-size: 11px; font-family: 'DM Sans', sans-serif;
-  cursor: pointer; transition: all 0.18s;
-  display: flex; align-items: center; justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.set-dot:hover { border-color: var(--accent); color: var(--accent2); background: rgba(255,255,255,0.05); }
-.set-dot.done {
-  background: var(--set-dot-done-bg);
-  border-color: var(--done-b);
-  color: #fff; font-weight: 600;
-  box-shadow: 0 2px 10px var(--glow);
-}
-.kg-label { font-size: 10px; color: var(--muted); }
-.kg-input {
-  width: 50px; height: 28px; border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--input-bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 11px;
-  text-align: center; padding: 0 4px;
-  transition: border-color 0.18s;
-}
-.kg-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
-.kg-input::placeholder { color: var(--muted); }
-
-.bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
-.bottom-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.complete-day-btn {
-  padding: 8px 18px; border-radius: var(--r-pill);
-  background: var(--complete-day-btn-bg);
-  border: 1px solid var(--complete-day-btn-border);
-  color: var(--complete-day-btn-color);
-  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.complete-day-btn:hover { filter: brightness(1.15); }
-.save-preset-btn {
-  padding: 8px 18px; border-radius: var(--r-pill);
-  background: var(--save-preset-btn-bg);
-  border: 1px solid var(--save-preset-btn-border);
-  color: var(--save-preset-btn-color);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.save-preset-btn:hover { background: rgba(0,0,0,0.04); border-color: var(--accent); }
-.preset-select {
-  background: var(--glass); border: 1px solid var(--border);
-  color: var(--text); padding: 7px 12px; border-radius: var(--r-pill);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  backdrop-filter: var(--blur); cursor: pointer;
-  max-width: 180px;
-}
-.reset-pill {
-  padding: 8px 20px; border-radius: var(--r-pill);
-  background: var(--reset-pill-bg);
-  border: 1px solid var(--reset-pill-border);
-  color: var(--reset-pill-color);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.reset-pill:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
-
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 100; display: flex; align-items: center; justify-content: center;
-  padding: 16px;
-}
-.modal {
-  background: var(--bg); border: 1px solid var(--border-h);
-  border-radius: var(--r-xl); padding: 24px; max-width: 550px; width: 100%;
-  max-height: 85vh; max-height: 85dvh; overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-}
-.modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--accent2); margin-bottom: 16px; }
-.modal-field { margin-bottom: 12px; }
-.modal-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
-.modal-field input, .modal-field select {
-  width: 100%; padding: 10px 12px; border-radius: var(--r-md);
-  border: 1px solid var(--border); background: var(--input-bg);
-  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
-}
-.modal-field input:focus { outline: none; border-color: var(--accent); }
-.exercise-edit-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
-.exercise-edit-row input { flex: 1; min-width: 80px; }
-.exercise-edit-row .small { width: 50px; flex: none; }
-.modal-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; flex-wrap: wrap; }
-.btn {
-  padding: 8px 18px; border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: var(--glass);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:hover { background: var(--glass-h); }
-.btn.accent { background: var(--t-btn-primary-bg); border-color: var(--border-h); color: #fff; }
-.btn.green { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.35); color: #16a34a; }
-.btn.red { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
-
-.theme-options { display: flex; gap: 8px; flex-wrap: wrap; }
-.theme-option {
-  width: 44px; height: 44px; border-radius: 14px;
-  border: 2px solid var(--border);
-  cursor: pointer; transition: all 0.2s;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-}
-.theme-option:hover { border-color: var(--accent); transform: scale(1.05); }
-.theme-option.active { border-color: var(--accent2); box-shadow: 0 0 14px var(--glow); }
-.theme-option.active::after {
-  content: '✓';
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 18px; font-weight: 700;
-  text-shadow: 0 0 8px rgba(0,0,0,0.6);
-}
-.theme-opt-blackout { background: linear-gradient(135deg, #1a1a2e, #2a2a3a); }
-.theme-opt-fire { background: linear-gradient(135deg, #3d1a0c, #6b2810); }
-.theme-opt-aqua { background: linear-gradient(135deg, #0a2a33, #1a4a55); }
-.theme-opt-forest { background: linear-gradient(135deg, #0a1f0e, #1a3a1e); }
-.theme-opt-violet { background: linear-gradient(135deg, #1a0a2e, #3a1a55); }
-.theme-opt-liquid { background: linear-gradient(135deg, #e8eaf0, #c7cdf5); border: 2px solid rgba(99,102,241,0.3); }
-
-/* ========== АДАПТИВ ========== */
-
-/* Планшеты и небольшие ноутбуки (768px - 1024px) */
-@media (max-width: 1024px) {
-  :root {
-    --bento-cols: 1fr 1fr;
-    --page-padding: 16px;
-    --gap: 10px;
-    --h1-size: 44px;
-    --h1-spacing: 3px;
-    --day-name-size: 22px;
-    --timer-ring-size: 110px;
-    --timer-digits-size: 30px;
-    --prog-gap: 14px;
-    --prog-padding: 16px 18px;
-  }
-  .card-timer {
-    grid-column: 1 / -1;
-    grid-row: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .timer-mode { max-width: 300px; }
-  .presets { grid-template-columns: repeat(4, 1fr); max-width: 400px; }
-  .timer-controls { flex-direction: row; flex-wrap: wrap; max-width: 400px; }
-  .timer-controls .t-btn { flex: 1; min-width: 100px; }
-  .card-progress { grid-column: 1 / -1; }
-  .card-exercises { grid-column: 1 / -1; }
+.set-progress {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
 }
 
-/* Планшеты вертикальные (480px - 768px) */
-@media (max-width: 768px) {
-  :root {
-    --bento-cols: 1fr;
-    --page-padding: 12px;
-    --gap: 8px;
-    --h1-size: 36px;
-    --h1-spacing: 2px;
-    --day-name-size: 20px;
-    --timer-ring-size: 100px;
-    --timer-digits-size: 28px;
-    --prog-gap: 12px;
-    --prog-padding: 14px 16px;
-    --timer-padding: 14px;
-    --ex-padding: 14px 16px 12px;
-    --streak-block-padding: 5px 5px 5px 12px;
-    --ex-card-padding: 8px 12px;
-    --ex-card-gap: 2px 8px;
-  }
-  .top-row { flex-direction: column; align-items: stretch; gap: 10px; }
-  .brand-block { justify-content: space-between; width: 100%; }
-  .streak-days-block { width: 100%; justify-content: space-between; }
-  .card-timer {
-    flex-direction: column;
+.set-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+    background: rgba(255,255,255,0.08);
+    transition: .25s;
+}
+
+.set-box.done {
+    background: white;
+    box-shadow: 0 0 14px rgba(255,255,255,0.4);
+}
+
+.workout-status {
+    margin-top: 28px;
+    color: rgba(255,255,255,0.6);
+    font-size: 15px;
+}
+
+.live-timer {
+    margin-top: 10px;
+    font-size: 54px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.set-btn {
+    width: 100%;
+    height: 60px;
+    border: none;
+    border-radius: 18px;
+    background: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 26px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.set-btn:active {
+    transform: scale(0.98);
+}
+
+.rest-config {
+    margin-top: 24px;
+}
+
+.rest-config label {
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+}
+
+.rest-input-wrap {
+    display: flex;
     align-items: center;
-  }
-  .timer-mode { max-width: 100%; }
-  .presets { max-width: 100%; }
-  .timer-controls { max-width: 100%; }
-  .bottom-row { flex-direction: column; align-items: stretch; }
-  .bottom-left { flex-direction: column; align-items: stretch; }
-  .bottom-left > * { width: 100%; }
-  .preset-select { max-width: 100%; }
-  .reset-pill { width: 100%; text-align: center; }
-  .settings-btn { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 18px; }
+    gap: 12px;
 }
 
-/* Телефоны (до 480px) */
-@media (max-width: 480px) {
-  :root {
-    --page-padding: 10px;
-    --gap: 6px;
-    --h1-size: 30px;
-    --h1-spacing: 1px;
-    --day-name-size: 18px;
-    --timer-ring-size: 90px;
-    --timer-digits-size: 26px;
-    --prog-gap: 10px;
-    --prog-padding: 12px 14px;
-    --timer-padding: 12px 10px;
-    --ex-padding: 12px 14px 10px;
-    --streak-block-padding: 4px 4px 4px 10px;
-    --ex-card-padding: 8px 10px;
-    --ex-card-gap: 2px 6px;
-    --r-xl: 18px;
-    --r-lg: 14px;
-  }
-  .brand-badge { font-size: 10px; padding: 3px 8px; }
-  .day-pill { padding: 5px 10px; font-size: 11px; gap: 4px; }
-  .day-pill .del-day { font-size: 12px; }
-  .streak-mini .icon { font-size: 16px; }
-  .streak-mini .num { font-size: 18px; }
-  .card-progress { flex-direction: column; align-items: flex-start; }
-  .prog-ring-wrap { width: 56px; height: 56px; }
-  .prog-center { font-size: 15px; }
-  .prog-text h3 { font-size: 14px; }
-  .prog-text p { font-size: 11px; }
-  .prog-stats { gap: 10px; }
-  .prog-stat { font-size: 10px; }
-  .timer-mode-btn { font-size: 10px; padding: 5px 6px; }
-  .presets { gap: 4px; }
-  .preset-pill { font-size: 10px; padding: 5px 3px; }
-  .t-btn { font-size: 11px; padding: 8px; }
-  .ex-name { font-size: 12px; }
-  .ex-target { font-size: 9px; padding: 1px 6px; }
-  .set-dot { width: 26px; height: 26px; font-size: 10px; border-radius: 6px; }
-  .kg-input { width: 44px; height: 26px; font-size: 10px; }
-  .edit-day-btn { font-size: 11px; padding: 2px 8px; }
-  .complete-day-btn, .save-preset-btn, .reset-pill { font-size: 11px; padding: 7px 14px; }
-  .preset-select { font-size: 11px; padding: 6px 10px; }
-  .settings-btn { top: 8px; right: 8px; width: 32px; height: 32px; font-size: 16px; }
-  .modal { padding: 16px; }
-  .modal h3 { font-size: 20px; }
-  .modal-field input, .modal-field select { font-size: 13px; padding: 8px 10px; }
-  .btn { font-size: 11px; padding: 7px 14px; }
-  .theme-option { width: 38px; height: 38px; border-radius: 12px; }
+.rest-input-wrap input {
+    width: 110px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #1a1a1a;
+    color: white;
+    font-size: 16px;
+    padding: 0 14px;
+    outline: none;
 }
 
-/* Очень маленькие телефоны (до 360px) */
-@media (max-width: 360px) {
-  :root {
-    --h1-size: 26px;
-    --timer-ring-size: 80px;
-    --timer-digits-size: 22px;
-    --day-name-size: 16px;
-    --prog-gap: 8px;
-    --prog-padding: 10px 12px;
-    --timer-padding: 10px 8px;
-    --ex-padding: 10px 12px 8px;
-  }
-  .day-pills { gap: 3px; }
-  .day-pill { padding: 4px 8px; font-size: 10px; }
-  .timer-controls { gap: 4px; }
-  .t-btn { padding: 7px; font-size: 10px; }
-  .ex-card { gap: 2px 4px; }
-  .set-dot { width: 24px; height: 24px; font-size: 10px; }
+.rest-input-wrap span {
+    color: rgba(255,255,255,0.5);
+}
+
+.settings {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    width: 52px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: #222;
+    border-radius: 999px;
+    transition: .25s;
+}
+
+.slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    left: 4px;
+    top: 4px;
+    transition: .25s;
+}
+
+.switch input:checked + .slider {
+    background: #444;
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(22px);
+}
+
+.timer-window {
+    margin-top: 24px;
+    background: #161616;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.timer-window-title {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.timer-window-time {
+    font-size: 42px;
+    font-weight: 800;
 }
 </style>
 </head>
 <body>
 
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
-<div class="bg-symbols" id="bgSymbols"></div>
+<div class="set-panel">
 
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="var(--ring-grad-1)"/>
-      <stop offset="100%" stop-color="var(--ring-grad-2)"/>
-    </linearGradient>
-    <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="var(--timer-grad-1)"/>
-      <stop offset="100%" stop-color="var(--timer-grad-2)"/>
-    </linearGradient>
-  </defs>
-</svg>
-
-<button class="settings-btn" onclick="openSettings()" title="Настройки">⚙</button>
-
-<div class="page">
-  <div class="top-row">
-    <div class="brand-block">
-      <h1>ТРЕНИРОВКИ</h1>
-      <span class="brand-badge">Набор массы · Дома</span>
-    </div>
-    <div class="streak-days-block" id="streakDaysBlock">
-      <div class="streak-mini">
-        <span class="icon">🔥</span>
-        <span class="num" id="streakNum">0</span>
-      </div>
-      <div class="day-pills" id="dayPillsContainer"></div>
-      <button class="add-day-btn" id="addDayBtn" onclick="addDay()" title="Добавить день">+</button>
-    </div>
-  </div>
-
-  <div class="bento">
-    <div class="card card-progress">
-      <div class="prog-ring-wrap">
-        <svg width="70" height="70" viewBox="0 0 70 70">
-          <circle class="prog-ring-bg" cx="35" cy="35" r="30"/>
-          <circle class="prog-ring-fill" id="prog-ring" cx="35" cy="35" r="30"
-            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
-        </svg>
-        <div class="prog-center" id="prog-pct">0%</div>
-      </div>
-      <div class="prog-bar-wrap">
-        <div class="prog-text" style="margin-bottom:8px">
-          <h3 id="prog-title">Начнём тренировку</h3>
-          <p id="prog-sub">Отмечай подходы ниже</p>
-        </div>
-        <div class="prog-bar-track">
-          <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
-        </div>
-        <div class="prog-stats" style="margin-top:6px">
-          <div class="prog-stat">Сделано: <span id="prog-done">0</span></div>
-          <div class="prog-stat">Осталось: <span id="prog-left">0</span></div>
-          <div class="prog-stat">Всего: <span id="prog-total">0</span></div>
-        </div>
-      </div>
+    <div>
+        <div class="exercise-title">Жим лежа</div>
+        <div class="exercise-sub">80 кг × 12</div>
     </div>
 
-    <div class="card card-timer">
-      <div class="timer-mode">
-        <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
-        <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
-      </div>
-      <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
-        <div class="timer-ring-wrap">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle class="tr-bg" cx="65" cy="65" r="55"/>
-            <circle class="tr-fill" id="timer-ring" cx="65" cy="65" r="55"
-              stroke-dasharray="345.6" stroke-dashoffset="0"/>
-          </svg>
-          <div class="timer-center">
-            <div class="timer-digits" id="timer-display">01:30</div>
-            <div class="timer-label">отдых</div>
-          </div>
-        </div>
-        <div class="presets">
-          <button class="preset-pill" onclick="setTimer(60)">1 мин</button>
-          <button class="preset-pill" onclick="setTimer(90)">1:30</button>
-          <button class="preset-pill" onclick="setTimer(120)">2 мин</button>
-          <button class="preset-pill" onclick="setTimer(180)">3 мин</button>
-        </div>
-        <div class="timer-controls">
-          <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
-          <button class="t-btn" onclick="resetTimer()">Сброс</button>
-        </div>
-      </div>
-      <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
-        <div class="timer-ring-wrap">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle class="tr-bg" cx="65" cy="65" r="55"/>
-            <circle class="tr-fill" id="sw-ring" cx="65" cy="65" r="55"
-              stroke-dasharray="345.6" stroke-dashoffset="345.6"/>
-          </svg>
-          <div class="timer-center">
-            <div class="timer-digits" id="sw-display" style="font-size:28px">00:00</div>
-            <div class="timer-label">секундомер</div>
-          </div>
-        </div>
-        <div class="timer-controls">
-          <button class="t-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
-          <div class="t-row">
-            <button class="t-btn" onclick="lapSW()">Круг</button>
-            <button class="t-btn" onclick="resetSW()">Сброс</button>
-          </div>
-        </div>
-        <div class="laps-box" id="laps-list"></div>
-      </div>
+    <div class="set-progress">
+        <div class="set-box"></div>
+        <div class="set-box"></div>
+        <div class="set-box"></div>
+        <div class="set-box"></div>
     </div>
 
-    <div class="card card-exercises" id="exercisesContainer"></div>
-  </div>
-
-  <div class="bottom-row">
-    <div class="bottom-left">
-      <button class="complete-day-btn" onclick="completeDay()">✓ Завершить день</button>
-      <button class="save-preset-btn" onclick="savePreset()">💾 Сохранить пресет</button>
-      <select class="preset-select" id="presetSelect" onchange="loadPreset(this.value)">
-        <option value="">— Загрузить пресет —</option>
-      </select>
+    <div class="workout-status" id="workoutStatus">
+        Готов к подходу
     </div>
-    <button class="reset-pill" onclick="resetDay()">Сбросить день</button>
-  </div>
+
+    <div class="live-timer" id="liveTimer">
+        00:00
+    </div>
+
+    <button class="set-btn" id="setBtn">
+        Начать подход
+    </button>
+
+    <div class="rest-config">
+        <label>Отдых между подходами</label>
+
+        <div class="rest-input-wrap">
+            <input type="number" id="restSeconds" value="90">
+            <span>сек</span>
+        </div>
+    </div>
+
+    <div class="settings">
+        <div class="setting-row">
+            <span>Отдельное окно таймера</span>
+
+            <label class="switch">
+                <input type="checkbox" id="externalTimerToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="timer-window" id="timerWindow">
+        <div class="timer-window-title">Отдельный таймер</div>
+        <div class="timer-window-time" id="externalTime">00:00</div>
+    </div>
+
 </div>
 
-<div id="modalContainer"></div>
-
 <script>
-// ── THEME ──
-const THEME_KEY = 'selectedTheme';
-const THEMES = ['blackout', 'fire', 'aqua', 'forest', 'violet', 'liquid'];
-const DEFAULT_THEME = 'blackout';
+let workoutStarted = false;
+let currentSet = 0;
+let seconds = 0;
+let interval;
 
-function getTheme() { return localStorage.getItem(THEME_KEY) || DEFAULT_THEME; }
-function applyTheme(theme) {
-  document.body.classList.remove(...THEMES.map(t => `theme-${t}`));
-  if (theme !== 'blackout') document.body.classList.add(`theme-${theme}`);
-  updateSymbolColors();
-}
-function setTheme(theme) { localStorage.setItem(THEME_KEY, theme); applyTheme(theme); }
-function updateSymbolColors() {
-  const style = getComputedStyle(document.body);
-  const color = style.getPropertyValue('--sym-color').trim();
-  document.querySelectorAll('.bg-sym').forEach(s => s.style.color = color);
-}
+const setBtn = document.getElementById('setBtn');
+const liveTimer = document.getElementById('liveTimer');
+const workoutStatus = document.getElementById('workoutStatus');
+const boxes = document.querySelectorAll('.set-box');
+const restInput = document.getElementById('restSeconds');
+const externalToggle = document.getElementById('externalTimerToggle');
+const timerWindow = document.getElementById('timerWindow');
+const externalTime = document.getElementById('externalTime');
 
-function openSettings() {
-  const current = getTheme();
-  document.getElementById('modalContainer').innerHTML = `
-    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-      <div class="modal" style="max-width:420px">
-        <h3>⚙ Настройки</h3>
-        <div class="modal-field">
-          <label>Тема</label>
-          <div class="theme-options">
-            <div class="theme-option theme-opt-blackout${current==='blackout'?' active':''}" onclick="setTheme('blackout');openSettings();" title="Blackout"></div>
-            <div class="theme-option theme-opt-fire${current==='fire'?' active':''}" onclick="setTheme('fire');openSettings();" title="Fire"></div>
-            <div class="theme-option theme-opt-aqua${current==='aqua'?' active':''}" onclick="setTheme('aqua');openSettings();" title="Aqua"></div>
-            <div class="theme-option theme-opt-forest${current==='forest'?' active':''}" onclick="setTheme('forest');openSettings();" title="Forest"></div>
-            <div class="theme-option theme-opt-violet${current==='violet'?' active':''}" onclick="setTheme('violet');openSettings();" title="Violet"></div>
-            <div class="theme-option theme-opt-liquid${current==='liquid'?' active':''}" onclick="setTheme('liquid');openSettings();" title="Liquid Glass"></div>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button class="btn accent" onclick="closeModal()">Закрыть</button>
-        </div>
-      </div>
-    </div>`;
+function formatTime(total) {
+    const mins = Math.floor(total / 60)
+        .toString()
+        .padStart(2, '0');
+
+    const secs = (total % 60)
+        .toString()
+        .padStart(2, '0');
+
+    return `${mins}:${secs}`;
 }
 
-// ── BG SYMBOLS ──
-(function(){
-  const syms = ['✦','◈','⊕','✗','▲','◇','⬡','⊞','✚','◉','⌬','⊿','✕','△','◻','⬢','╋','⋆','✧','◆','⟡','⬟','✱','⌀'];
-  const container = document.getElementById('bgSymbols');
-  const count = window.innerWidth < 480 ? 16 : 28;
-  for(let i=0;i<count;i++){
-    const el = document.createElement('div');
-    el.className = 'bg-sym';
-    const sym = syms[Math.floor(Math.random()*syms.length)];
-    const size = 14 + Math.random()*70;
-    const x = Math.random()*100;
-    const y = Math.random()*100;
-    const dur = 5 + Math.random()*8;
-    const delay = -Math.random()*10;
-    const r0 = (Math.random()*40-20).toFixed(1)+'deg';
-    const r1 = (Math.random()*40-20).toFixed(1)+'deg';
-    const op = (0.10 + Math.random()*0.15).toFixed(3);
-    el.textContent = sym;
-    el.style.cssText = `left:${x}%; top:${y}%; font-size:${size}px; opacity:${op}; --r0:${r0}; --r1:${r1}; animation-duration:${dur}s; animation-delay:${delay}s;`;
-    container.appendChild(el);
-  }
-  updateSymbolColors();
-})();
-
-// ── STATE ──
-const STORAGE_PLAN = 'customPlan_v2';
-const STORAGE_PRESETS = 'planPresets_v2';
-const STORAGE_STREAK = 'streakData';
-
-const DEFAULT_PLAN = [
-  { name: 'ГРУДЬ / ТРИЦЕПС', short: 'Грудь', exercises: [
-    { name: "Отжимания широкие", sets: 4, target: "12–15" },
-    { name: "Жим гантелей лёжа", sets: 4, target: "10–12" },
-    { name: "Разводка гантелей", sets: 3, target: "12" },
-    { name: "Отжимания узкие", sets: 3, target: "12" },
-    { name: "Французский жим", sets: 3, target: "12" },
-  ]},
-  { name: 'СПИНА / БИЦЕПС', short: 'Спина', exercises: [
-    { name: "Подтягивания широкие", sets: 4, target: "макс." },
-    { name: "Подтягивания обр. хватом", sets: 4, target: "макс." },
-    { name: "Тяга гантели в наклоне", sets: 4, target: "10–12" },
-    { name: "Сгибания на бицепс", sets: 3, target: "12" },
-    { name: "Молотковые сгибания", sets: 3, target: "12" },
-  ]},
-  { name: 'НОГИ / ПЛЕЧИ', short: 'Ноги', exercises: [
-    { name: "Приседания с гантелями", sets: 4, target: "15" },
-    { name: "Выпады с гантелями", sets: 3, target: "12" },
-    { name: "Румынская тяга", sets: 4, target: "12" },
-    { name: "Жим сидя над головой", sets: 4, target: "12" },
-    { name: "Подъём в стороны", sets: 3, target: "15" },
-  ]},
-  { name: 'ПОЛНОЕ ТЕЛО', short: 'Фулл', exercises: [
-    { name: "Подтягивания", sets: 5, target: "макс." },
-    { name: "Отжимания с возвышения", sets: 4, target: "12" },
-    { name: "Болгарские приседания", sets: 3, target: "10" },
-    { name: "Тяга к подбородку", sets: 3, target: "12" },
-    { name: "Планка", sets: 3, target: "45–60 сек" },
-  ]},
-];
-
-function loadPlan() {
-  try { const r = localStorage.getItem(STORAGE_PLAN); return r ? JSON.parse(r) : JSON.parse(JSON.stringify(DEFAULT_PLAN)); }
-  catch { return JSON.parse(JSON.stringify(DEFAULT_PLAN)); }
-}
-function savePlan(plan) { localStorage.setItem(STORAGE_PLAN, JSON.stringify(plan)); }
-
-let PLAN = loadPlan();
-let currentDay = 0;
-
-const sk = (d,e) => `wt2_d${d}_e${e}`;
-const wk = (d,e) => `wt2_d${d}_e${e}_w`;
-const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
-const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
-
-function getStreak() {
-  try { const r = localStorage.getItem(STORAGE_STREAK); return r ? JSON.parse(r) : { streak: 0, lastDate: null }; }
-  catch { return { streak: 0, lastDate: null }; }
-}
-function saveStreak(d) { localStorage.setItem(STORAGE_STREAK, JSON.stringify(d)); }
-function updateStreakUI() { document.getElementById('streakNum').textContent = getStreak().streak; }
-function completeDay() {
-  const s = getStreak();
-  const today = new Date().toISOString().split('T')[0];
-  if (s.lastDate === today) { alert('Сегодня уже отмечено! 🔥'); return; }
-  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
-  s.streak = (s.lastDate === yesterday) ? s.streak + 1 : 1;
-  s.lastDate = today;
-  saveStreak(s);
-  updateStreakUI();
-  alert(`День засчитан! Стрик: ${s.streak} дн. 🔥`);
+function updateBothTimers(value) {
+    liveTimer.textContent = value;
+    externalTime.textContent = value;
 }
 
-function addDay() {
-  if (PLAN.length >= 7) { alert('Максимум 7 дней!'); return; }
-  const name = prompt('Название дня (например, "ПЛЕЧИ"):');
-  if (!name || !name.trim()) return;
-  const short = prompt('Короткое имя для кнопки (например, "Плечи"):');
-  if (!short || !short.trim()) return;
-  PLAN.push({ name: name.trim().toUpperCase(), short: short.trim(), exercises: [{ name: "Новое упражнение", sets: 3, target: "10" }] });
-  savePlan(PLAN);
-  renderAll();
-  switchDay(PLAN.length - 1);
+function playSound() {
+    const audio = new Audio(
+        'https://actions.google.com/sounds/v1/alarms/beep_short.ogg'
+    );
+
+    audio.play();
 }
 
-function deleteDay(di) {
-  if (PLAN.length <= 1) { alert('Должен быть хотя бы 1 день!'); return; }
-  if (!confirm(`Удалить день «${PLAN[di].name}»? Прогресс дня сбросится.`)) return;
-  PLAN.splice(di, 1);
-  savePlan(PLAN);
-  if (currentDay >= PLAN.length) currentDay = PLAN.length - 1;
-  for (let i = 0; i < 20; i++) { localStorage.removeItem(sk(di, i)); localStorage.removeItem(wk(di, i)); }
-  for (let d = di; d < PLAN.length; d++) {
-    for (let e = 0; e < 20; e++) {
-      const oldS = localStorage.getItem(sk(d+1, e));
-      const oldW = localStorage.getItem(wk(d+1, e));
-      if (oldS !== null) { localStorage.setItem(sk(d, e), oldS); localStorage.removeItem(sk(d+1, e)); }
-      if (oldW !== null) { localStorage.setItem(wk(d, e), oldW); localStorage.removeItem(wk(d+1, e)); }
+function startWorkoutTimer() {
+    seconds = 0;
+
+    interval = setInterval(() => {
+        seconds++;
+
+        updateBothTimers(formatTime(seconds));
+    }, 1000);
+}
+
+function startRestTimer() {
+    let rest = parseInt(restInput.value);
+
+    workoutStatus.textContent = 'Отдых';
+
+    interval = setInterval(() => {
+        rest--;
+
+        updateBothTimers(formatTime(rest));
+
+        if (rest <= 0) {
+            clearInterval(interval);
+
+            workoutStatus.textContent = 'Время нового подхода';
+
+            updateBothTimers('00:00');
+
+            playSound();
+
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+
+            setBtn.textContent = 'Начать подход';
+            workoutStarted = false;
+        }
+    }, 1000);
+}
+
+setBtn.addEventListener('click', () => {
+
+    if (currentSet >= boxes.length) {
+        workoutStatus.textContent = 'Все подходы выполнены';
+        return;
     }
-  }
-  renderAll();
-}
 
-function renderDayPills() {
-  const container = document.getElementById('dayPillsContainer');
-  const addBtn = document.getElementById('addDayBtn');
-  container.innerHTML = '';
-  PLAN.forEach((day, i) => {
-    const pill = document.createElement('button');
-    pill.className = 'day-pill' + (i === currentDay ? ' active' : '');
-    pill.innerHTML = `${day.short} <span class="del-day" onclick="event.stopPropagation();deleteDay(${i})" title="Удалить день">×</span>`;
-    pill.onclick = () => switchDay(i);
-    container.appendChild(pill);
-  });
-  addBtn.style.display = PLAN.length >= 7 ? 'none' : 'flex';
-}
+    if (!workoutStarted) {
+        workoutStarted = true;
 
-function renderExercises() {
-  const container = document.getElementById('exercisesContainer');
-  container.innerHTML = '';
-  PLAN.forEach((day, di) => {
-    const dayDiv = document.createElement('div');
-    dayDiv.className = 'day';
-    dayDiv.id = `day-${di}`;
-    dayDiv.style.display = di === currentDay ? 'block' : 'none';
-    let exHTML = '';
-    day.exercises.forEach((ex, ei) => {
-      const state = loadSt(di, ei, ex.sets);
-      const weight = localStorage.getItem(wk(di,ei)) || '';
-      let dots = '';
-      for (let s = 0; s < ex.sets; s++)
-        dots += `<button class="set-dot${state[s]?' done':''}" onclick="toggleSet(${di},${ei},${s})">${s+1}</button>`;
-      exHTML += `
-        <div class="ex-card${state.every(Boolean)?' completed':''}" id="ex-${di}-${ei}">
-          <span class="ex-name">${ex.name}</span>
-          <span class="ex-target">${ex.target}</span>
-          <div class="ex-controls">${dots}</div>
-          <div class="ex-weight">
-            <span class="kg-label">кг</span>
-            <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
-              oninput="localStorage.setItem('${wk(di,ei)}',this.value)">
-          </div>
-        </div>`;
-    });
-    dayDiv.innerHTML = `
-      <div class="day-header">
-        <span class="day-name">${day.name}</span>
-        <span class="day-count">${day.exercises.length} упр.</span>
-        <button class="edit-day-btn" onclick="openDayEditor(${di})">✎ Ред.</button>
-      </div>
-      <div class="exercise-list">${exHTML}</div>`;
-    container.appendChild(dayDiv);
-  });
-  updateProgress(currentDay);
-}
+        clearInterval(interval);
 
-function switchDay(day) {
-  currentDay = day;
-  document.querySelectorAll('.day').forEach((d,i) => d.style.display = i===day?'block':'none');
-  renderDayPills();
-  updateProgress(day);
-}
+        workoutStatus.textContent = 'Подход выполняется';
 
-function toggleSet(day, ei, s) {
-  const state = loadSt(day, ei, PLAN[day].exercises[ei].sets);
-  state[s] = !state[s]; saveSt(day, ei, state);
-  const el = document.getElementById(`ex-${day}-${ei}`);
-  el.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
-  el.querySelectorAll('.set-dot').forEach((b,i) => b.className = 'set-dot'+(state[i]?' done':''));
-  updateProgress(day);
-}
+        setBtn.textContent = 'Закончить подход';
 
-function updateProgress(day) {
-  let total=0, done=0;
-  PLAN[day].exercises.forEach((ex,ei)=>{
-    const s=loadSt(day,ei,ex.sets); total+=ex.sets; done+=s.filter(Boolean).length;
-  });
-  const pct = total>0 ? Math.round(done/total*100) : 0;
-  const circ = 188.5;
-  document.getElementById('prog-ring').style.strokeDashoffset = circ - (circ * pct/100);
-  document.getElementById('prog-pct').textContent = pct+'%';
-  document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-done').textContent = done;
-  document.getElementById('prog-left').textContent = total-done;
-  document.getElementById('prog-total').textContent = total;
-  document.getElementById('prog-title').textContent = pct===100 ? '🎉 Завершена!' : pct>0 ? `${pct}%` : 'Начнём';
-  document.getElementById('prog-sub').textContent = pct===100 ? 'Отлично!' : `${done}/${total} подходов`;
-}
+        startWorkoutTimer();
+    }
+    else {
+        workoutStarted = false;
 
-function resetDay() {
-  if (!confirm('Сбросить прогресс этого дня?')) return;
-  PLAN[currentDay].exercises.forEach((_,ei) => localStorage.removeItem(sk(currentDay,ei)));
-  renderExercises();
-}
+        clearInterval(interval);
 
-function openDayEditor(di) {
-  const day = PLAN[di];
-  let exRows = day.exercises.map((ex) => `
-    <div class="exercise-edit-row">
-      <input type="text" value="${ex.name}" placeholder="Название" class="ex-name-inp">
-      <input type="number" value="${ex.sets}" placeholder="Подх." class="small ex-sets-inp" min="1" max="20">
-      <input type="text" value="${ex.target}" placeholder="Цель" class="ex-target-inp">
-      <button class="btn red" onclick="this.parentElement.remove()">✕</button>
-    </div>`).join('');
-  document.getElementById('modalContainer').innerHTML = `
-    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-      <div class="modal">
-        <h3>Ред. день</h3>
-        <div class="modal-field">
-          <label>Название</label>
-          <input type="text" id="editDayName" value="${day.name}">
-        </div>
-        <div class="modal-field">
-          <label>Короткое имя</label>
-          <input type="text" id="editDayShort" value="${day.short}">
-        </div>
-        <div class="modal-field">
-          <label>Упражнения</label>
-          <div id="exRowsContainer">${exRows}</div>
-          <button class="btn green" onclick="addExRow()" style="margin-top:6px">+ Упражнение</button>
-        </div>
-        <div class="modal-actions">
-          <button class="btn" onclick="closeModal()">Отмена</button>
-          <button class="btn accent" onclick="saveDayEdit(${di})">Сохранить</button>
-        </div>
-      </div>
-    </div>`;
-}
+        boxes[currentSet].classList.add('done');
 
-function addExRow() {
-  const container = document.getElementById('exRowsContainer');
-  const row = document.createElement('div');
-  row.className = 'exercise-edit-row';
-  row.innerHTML = `
-    <input type="text" value="" placeholder="Название" class="ex-name-inp">
-    <input type="number" value="3" placeholder="Подх." class="small ex-sets-inp" min="1" max="20">
-    <input type="text" value="" placeholder="Цель" class="ex-target-inp">
-    <button class="btn red" onclick="this.parentElement.remove()">✕</button>`;
-  container.appendChild(row);
-}
+        currentSet++;
 
-function saveDayEdit(di) {
-  const name = document.getElementById('editDayName').value.trim();
-  const short = document.getElementById('editDayShort').value.trim();
-  if (!name || !short) { alert('Заполни названия!'); return; }
-  const rows = document.querySelectorAll('#exRowsContainer .exercise-edit-row');
-  const exercises = [];
-  rows.forEach(row => {
-    const n = row.querySelector('.ex-name-inp').value.trim();
-    const s = parseInt(row.querySelector('.ex-sets-inp').value) || 3;
-    const t = row.querySelector('.ex-target-inp').value.trim();
-    if (n) exercises.push({ name: n, sets: s, target: t || 'повт.' });
-  });
-  if (exercises.length === 0) { alert('Нужно минимум 1 упражнение!'); return; }
-  PLAN[di].name = name;
-  PLAN[di].short = short;
-  PLAN[di].exercises = exercises;
-  savePlan(PLAN);
-  for (let i = 0; i < 20; i++) { localStorage.removeItem(sk(di, i)); localStorage.removeItem(wk(di, i)); }
-  closeModal();
-  renderAll();
-}
+        setBtn.textContent = 'Отдых...';
 
-function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
+        startRestTimer();
+    }
+});
 
-function getPresets() { try { const r = localStorage.getItem(STORAGE_PRESETS); return r ? JSON.parse(r) : {}; } catch { return {}; } }
-function savePresets(p) { localStorage.setItem(STORAGE_PRESETS, JSON.stringify(p)); }
-function savePreset() {
-  const name = prompt('Название пресета:');
-  if (!name || !name.trim()) return;
-  const presets = getPresets();
-  presets[name.trim()] = JSON.parse(JSON.stringify(PLAN));
-  savePresets(presets);
-  renderPresetSelect();
-  alert(`Пресет «${name.trim()}» сохранён!`);
-}
-function loadPreset(name) {
-  if (!name) return;
-  if (!confirm(`Загрузить «${name}»? Текущий план заменится.`)) { document.getElementById('presetSelect').value = ''; return; }
-  const presets = getPresets();
-  if (presets[name]) {
-    PLAN = JSON.parse(JSON.stringify(presets[name]));
-    savePlan(PLAN);
-    currentDay = 0;
-    renderAll();
-    document.getElementById('presetSelect').value = '';
-  }
-}
-function renderPresetSelect() {
-  const sel = document.getElementById('presetSelect');
-  const presets = getPresets();
-  sel.innerHTML = '<option value="">— Загрузить пресет —</option>';
-  Object.keys(presets).forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
-}
+externalToggle.addEventListener('change', () => {
 
-function renderAll() {
-  renderDayPills();
-  renderExercises();
-  renderPresetSelect();
-  updateStreakUI();
-}
-
-applyTheme(getTheme());
-renderAll();
-updateProgress(currentDay);
-
-// ── TIMER ──
-function switchClock(m) {
-  document.querySelectorAll('.timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='timer')||(i===1&&m==='sw')));
-  document.getElementById('panel-timer').style.display = m==='timer'?'flex':'none';
-  document.getElementById('panel-sw').style.display = m==='sw'?'flex':'none';
-}
-const CIRC_T = 345.6;
-let timerTotal=90, timerLeft=90, timerInt=null, timerOn=false;
-const fmt = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-function updateTimerRing() { document.getElementById('timer-ring').style.strokeDashoffset = CIRC_T - (CIRC_T * timerLeft/timerTotal); }
-function setTimer(s) { resetTimer(); timerTotal=s; timerLeft=s; document.getElementById('timer-display').textContent=fmt(s); document.getElementById('timer-display').className='timer-digits'; updateTimerRing(); }
-function toggleTimer() {
-  if (timerOn) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; return; }
-  if (timerLeft<=0) timerLeft=timerTotal;
-  timerOn=true; document.getElementById('timer-btn').textContent='Пауза';
-  timerInt = setInterval(()=>{
-    timerLeft--;
-    const d = document.getElementById('timer-display');
-    d.textContent = fmt(timerLeft);
-    d.className = 'timer-digits'+(timerLeft<=10&&timerLeft>0?' warning':timerLeft<=0?' done':'');
-    updateTimerRing();
-    if (timerLeft<=0) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; }
-  }, 1000);
-}
-function resetTimer() { clearInterval(timerInt); timerOn=false; timerLeft=timerTotal; document.getElementById('timer-display').textContent=fmt(timerTotal); document.getElementById('timer-display').className='timer-digits'; document.getElementById('timer-btn').textContent='Старт'; updateTimerRing(); }
-
-let swMs=0, swInt=null, swOn=false, swLaps=[], swLastLap=0;
-const fmtSW = ms => { const s=Math.floor(ms/1000),m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'.'+String(Math.floor((ms%1000)/10)).padStart(2,'0'); };
-function toggleSW() {
-  if (swOn) { clearInterval(swInt); swOn=false; document.getElementById('sw-btn').textContent='Продолжить'; return; }
-  const start=Date.now()-swMs; swOn=true; document.getElementById('sw-btn').textContent='Пауза';
-  swInt=setInterval(()=>{
-    swMs=Date.now()-start;
-    document.getElementById('sw-display').textContent=fmtSW(swMs);
-    document.getElementById('sw-ring').style.strokeDashoffset = CIRC_T - (CIRC_T * ((swMs%60000)/60000));
-  },30);
-}
-function lapSW() {
-  if(!swOn&&swMs===0) return;
-  const lapTime = swMs - swLastLap; swLastLap = swMs;
-  swLaps.unshift({n:swLaps.length+1, t:fmtSW(swMs), lap:fmtSW(lapTime)});
-  document.getElementById('laps-list').innerHTML = swLaps.map(l=>`<div class="lap-item"><span>Круг ${l.n}</span><span style="color:var(--muted)">${l.lap}</span><span>${l.t}</span></div>`).join('');
-}
-function resetSW() { clearInterval(swInt); swOn=false; swMs=0; swLaps=[]; swLastLap=0; document.getElementById('sw-display').textContent='00:00'; document.getElementById('sw-btn').textContent='Старт'; document.getElementById('laps-list').innerHTML=''; document.getElementById('sw-ring').style.strokeDashoffset=CIRC_T; }
+    if (externalToggle.checked) {
+        timerWindow.style.display = 'block';
+    }
+    else {
+        timerWindow.style.display = 'none';
+    }
+});
 </script>
+
 </body>
 </html>
