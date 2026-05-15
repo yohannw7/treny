@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ё<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -53,6 +53,13 @@
   --reset-pill-bg: rgba(255,80,80,0.05);
   --reset-pill-border: rgba(255,100,100,0.12);
   --reset-pill-color: rgba(255,150,150,0.5);
+  /* Timer primary button */
+  --t-btn-primary-bg: linear-gradient(135deg, rgba(200,200,200,0.25), rgba(150,150,150,0.2));
+  --t-btn-primary-border: rgba(200,200,200,0.3);
+  --t-btn-primary-color: #fff;
+  /* Timer mode active */
+  --timer-mode-active-bg: rgba(255,255,255,0.15);
+  --timer-mode-active-color: #ccc;
 }
 
 /* Themes */
@@ -95,6 +102,11 @@
   --reset-pill-bg: rgba(255,80,80,0.07);
   --reset-pill-border: rgba(255,100,100,0.18);
   --reset-pill-color: rgba(255,150,150,0.6);
+  --t-btn-primary-bg: linear-gradient(135deg, rgba(255,126,95,0.38), rgba(200,60,60,0.38));
+  --t-btn-primary-border: var(--border-h);
+  --t-btn-primary-color: #fff;
+  --timer-mode-active-bg: rgba(255,126,95,0.25);
+  --timer-mode-active-color: #ffb347;
 }
 
 .theme-aqua {
@@ -136,6 +148,11 @@
   --reset-pill-bg: rgba(255,100,100,0.05);
   --reset-pill-border: rgba(255,100,100,0.12);
   --reset-pill-color: rgba(255,150,150,0.5);
+  --t-btn-primary-bg: linear-gradient(135deg, rgba(70,210,225,0.35), rgba(50,160,180,0.3));
+  --t-btn-primary-border: var(--border-h);
+  --t-btn-primary-color: #fff;
+  --timer-mode-active-bg: rgba(70,200,220,0.25);
+  --timer-mode-active-color: #7ee8f5;
 }
 
 .theme-forest {
@@ -177,6 +194,11 @@
   --reset-pill-bg: rgba(255,100,100,0.05);
   --reset-pill-border: rgba(255,100,100,0.12);
   --reset-pill-color: rgba(255,150,150,0.5);
+  --t-btn-primary-bg: linear-gradient(135deg, rgba(70,200,100,0.35), rgba(50,160,70,0.3));
+  --t-btn-primary-border: var(--border-h);
+  --t-btn-primary-color: #fff;
+  --timer-mode-active-bg: rgba(70,200,100,0.25);
+  --timer-mode-active-color: #7ef58e;
 }
 
 .theme-violet {
@@ -218,6 +240,11 @@
   --reset-pill-bg: rgba(255,80,80,0.07);
   --reset-pill-border: rgba(255,100,100,0.18);
   --reset-pill-color: rgba(255,150,150,0.6);
+  --t-btn-primary-bg: linear-gradient(135deg, rgba(150,100,255,0.35), rgba(110,60,220,0.3));
+  --t-btn-primary-border: var(--border-h);
+  --t-btn-primary-color: #fff;
+  --timer-mode-active-bg: rgba(140,90,255,0.25);
+  --timer-mode-active-color: #c4a3ff;
 }
 
 html { scroll-behavior: smooth; }
@@ -251,7 +278,6 @@ body {
 
 .page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 20px 20px 40px; }
 
-/* Settings button */
 .settings-btn {
   position: fixed; top: 16px; right: 20px; z-index: 50;
   width: 40px; height: 40px; border-radius: 50%;
@@ -265,7 +291,6 @@ body {
 }
 .settings-btn:hover { border-color: var(--accent); color: var(--accent2); background: var(--glass-h); }
 
-/* TOP ROW */
 .top-row {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 18px; gap: 16px; flex-wrap: wrap;
@@ -333,7 +358,6 @@ body {
 }
 .add-day-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(255,255,255,0.05); }
 
-/* Bento */
 .bento {
   display: grid;
   grid-template-columns: 1fr 1fr 280px;
@@ -399,8 +423,8 @@ body {
   cursor: pointer; transition: all 0.2s; text-align: center;
 }
 .timer-mode-btn.active {
-  background: rgba(255,126,95,0.25);
-  color: var(--accent2);
+  background: var(--timer-mode-active-bg);
+  color: var(--timer-mode-active-color);
   box-shadow: 0 1px 8px var(--glow);
 }
 .timer-ring-wrap { position: relative; width: 130px; height: 130px; flex-shrink: 0; }
@@ -439,8 +463,9 @@ body {
 }
 .t-btn:hover { background: var(--glass-h); }
 .t-btn.primary {
-  background: linear-gradient(135deg, rgba(255,126,95,0.2), rgba(200,60,60,0.2));
-  border-color: var(--border-h); color: #fff;
+  background: var(--t-btn-primary-bg);
+  border-color: var(--t-btn-primary-border);
+  color: var(--t-btn-primary-color);
   box-shadow: 0 3px 20px var(--glow);
 }
 .t-btn.primary:hover { box-shadow: 0 4px 28px var(--glow); }
@@ -558,7 +583,6 @@ body {
 }
 .reset-pill:hover { background: rgba(255,80,80,0.12); border-color: rgba(255,100,100,0.3); color: #ff9090; }
 
-/* Modal */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.7);
   backdrop-filter: blur(4px);
@@ -595,7 +619,6 @@ body {
 .btn.green { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.4); color: #2ecc71; }
 .btn.red { background: rgba(255,80,80,0.15); border-color: rgba(255,100,100,0.3); color: #ff9090; }
 
-/* Theme picker in modal */
 .theme-options { display: flex; gap: 8px; flex-wrap: wrap; }
 .theme-option {
   width: 44px; height: 44px; border-radius: 14px;
@@ -647,7 +670,6 @@ body {
   </defs>
 </svg>
 
-<!-- Settings button -->
 <button class="settings-btn" onclick="openSettings()" title="Настройки">⚙</button>
 
 <div class="page">
@@ -761,42 +783,27 @@ body {
 <div id="modalContainer"></div>
 
 <script>
-// ── THEME SYSTEM ──
+// ── THEME ──
 const THEME_KEY = 'selectedTheme';
 const THEMES = ['blackout', 'fire', 'aqua', 'forest', 'violet'];
 const DEFAULT_THEME = 'blackout';
 
-function getTheme() {
-  return localStorage.getItem(THEME_KEY) || DEFAULT_THEME;
-}
-
+function getTheme() { return localStorage.getItem(THEME_KEY) || DEFAULT_THEME; }
 function applyTheme(theme) {
-  // Удаляем все theme- классы с body
   document.body.classList.remove(...THEMES.map(t => `theme-${t}`));
-  if (theme !== 'blackout') {
-    document.body.classList.add(`theme-${theme}`);
-  }
-  // Обновляем цвет символов фона
+  if (theme !== 'blackout') document.body.classList.add(`theme-${theme}`);
   updateSymbolColors();
 }
-
-function setTheme(theme) {
-  localStorage.setItem(THEME_KEY, theme);
-  applyTheme(theme);
-}
-
+function setTheme(theme) { localStorage.setItem(THEME_KEY, theme); applyTheme(theme); }
 function updateSymbolColors() {
-  const syms = document.querySelectorAll('.bg-sym');
   const style = getComputedStyle(document.body);
   const color = style.getPropertyValue('--sym-color').trim();
-  syms.forEach(s => s.style.color = color);
+  document.querySelectorAll('.bg-sym').forEach(s => s.style.color = color);
 }
 
-// ── SETTINGS MODAL ──
 function openSettings() {
   const current = getTheme();
-  const modal = document.getElementById('modalContainer');
-  modal.innerHTML = `
+  document.getElementById('modalContainer').innerHTML = `
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal" style="max-width:400px">
         <h3>⚙ Настройки</h3>
@@ -890,7 +897,6 @@ const wk = (d,e) => `wt2_d${d}_e${e}_w`;
 const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
 const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
 
-// ── STREAK ──
 function getStreak() {
   try { const r = localStorage.getItem(STORAGE_STREAK); return r ? JSON.parse(r) : { streak: 0, lastDate: null }; }
   catch { return { streak: 0, lastDate: null }; }
@@ -909,7 +915,6 @@ function completeDay() {
   alert(`День засчитан! Стрик: ${s.streak} дн. 🔥`);
 }
 
-// ── DAYS MANAGEMENT ──
 function addDay() {
   if (PLAN.length >= 7) { alert('Максимум 7 дней!'); return; }
   const name = prompt('Название дня (например, "ПЛЕЧИ"):');
@@ -1032,18 +1037,16 @@ function resetDay() {
   renderExercises();
 }
 
-// ── DAY EDITOR ──
 function openDayEditor(di) {
   const day = PLAN[di];
-  const modal = document.getElementById('modalContainer');
-  let exRows = day.exercises.map((ex,ei) => `
+  let exRows = day.exercises.map((ex) => `
     <div class="exercise-edit-row">
       <input type="text" value="${ex.name}" placeholder="Название" class="ex-name-inp">
       <input type="number" value="${ex.sets}" placeholder="Подх." class="small ex-sets-inp" min="1" max="20">
       <input type="text" value="${ex.target}" placeholder="Цель" class="ex-target-inp">
       <button class="btn red" onclick="this.parentElement.remove()">✕</button>
     </div>`).join('');
-  modal.innerHTML = `
+  document.getElementById('modalContainer').innerHTML = `
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal">
         <h3>Ред. день</h3>
@@ -1104,7 +1107,6 @@ function saveDayEdit(di) {
 
 function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
 
-// ── PRESETS ──
 function getPresets() { try { const r = localStorage.getItem(STORAGE_PRESETS); return r ? JSON.parse(r) : {}; } catch { return {}; } }
 function savePresets(p) { localStorage.setItem(STORAGE_PRESETS, JSON.stringify(p)); }
 function savePreset() {
@@ -1142,7 +1144,6 @@ function renderAll() {
   updateStreakUI();
 }
 
-// ── INIT ──
 applyTheme(getTheme());
 renderAll();
 updateProgress(currentDay);
