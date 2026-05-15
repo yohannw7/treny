@@ -78,7 +78,6 @@
   --ex-card-gap: 3px 10px;
 }
 
-/* Themes — оставляю как было */
 .theme-fire {
   --bg: #0d0818;
   --glass: rgba(255,255,255,0.06);
@@ -522,17 +521,6 @@ body {
 .timer-digits.warning { background: var(--timer-digits-warn); -webkit-background-clip:text; background-clip:text; filter: drop-shadow(0 0 8px rgba(239,68,68,0.5)); }
 .timer-digits.done { background: var(--timer-digits-done); -webkit-background-clip:text; background-clip:text; }
 .timer-label { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
-.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 100%; }
-.preset-pill {
-  padding: 6px 4px; border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.03);
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: 11px;
-  cursor: pointer; transition: all 0.2s; text-align: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.preset-pill:hover { border-color: var(--accent); color: var(--accent2); background: rgba(255,255,255,0.05); }
 .timer-controls { display: flex; flex-direction: column; gap: 5px; width: 100%; }
 .t-btn {
   width: 100%; padding: 9px; border-radius: var(--r-lg);
@@ -574,20 +562,28 @@ body {
 .edit-day-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
 .exercise-list { display: flex; flex-direction: column; gap: 6px; }
+
+/* Карточка упражнения */
 .ex-card {
   background: rgba(0,0,0,0.02);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: var(--ex-card-padding);
   transition: background 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ex-card:hover { background: var(--glass-h); }
+.ex-card.completed { background: var(--done); border-color: var(--done-b); }
+
+.ex-main {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
   gap: var(--ex-card-gap);
   align-items: center;
 }
-.ex-card:hover { background: var(--glass-h); }
-.ex-card.completed { background: var(--done); border-color: var(--done-b); }
 .ex-name { font-size: 13px; font-weight: 500; grid-column: 1; grid-row: 1; }
 .ex-card.completed .ex-name { color: var(--muted); text-decoration: line-through; }
 .ex-target {
@@ -606,12 +602,10 @@ body {
   background: rgba(0,0,0,0.05);
   color: var(--muted);
   font-size: 11px; font-family: 'DM Sans', sans-serif;
-  cursor: pointer; transition: all 0.18s;
+  cursor: default;
   display: flex; align-items: center; justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+  transition: all 0.18s;
 }
-.set-dot:hover { border-color: var(--accent); color: var(--accent2); background: rgba(255,255,255,0.05); }
 .set-dot.done {
   background: var(--set-dot-done-bg);
   border-color: var(--done-b);
@@ -630,6 +624,89 @@ body {
 }
 .kg-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
 .kg-input::placeholder { color: var(--muted); }
+
+/* Панель подхода */
+.approach-panel {
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.06);
+  border-radius: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+}
+.approach-timer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.approach-timer-label { font-size: 11px; color: var(--muted); }
+.approach-timer-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  background: var(--timer-digits-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.approach-controls {
+  display: flex;
+  gap: 6px;
+}
+.ap-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ap-btn.start {
+  background: var(--t-btn-primary-bg);
+  border-color: var(--t-btn-primary-border);
+  color: var(--t-btn-primary-color);
+}
+.ap-btn.finish {
+  background: rgba(0,0,0,0.08);
+  color: var(--muted);
+}
+.ap-btn.finish:not(:disabled) {
+  background: var(--complete-day-btn-bg);
+  border-color: var(--complete-day-btn-border);
+  color: var(--complete-day-btn-color);
+}
+.ap-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.approach-rest {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rest-label { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+.rest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rest-input {
+  width: 60px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  text-align: center;
+}
+.rest-input:focus { outline: none; border-color: var(--accent); }
+.rest-timer-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--accent2);
+}
 
 .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
 .bottom-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -674,6 +751,7 @@ body {
 }
 .reset-pill:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
 
+/* Модалки */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   backdrop-filter: blur(6px);
@@ -714,6 +792,7 @@ body {
 .btn.green { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.35); color: #16a34a; }
 .btn.red { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
 
+/* Выбор темы */
 .theme-options { display: flex; gap: 8px; flex-wrap: wrap; }
 .theme-option {
   width: 44px; height: 44px; border-radius: 14px;
@@ -738,9 +817,7 @@ body {
 .theme-opt-violet { background: linear-gradient(135deg, #1a0a2e, #3a1a55); }
 .theme-opt-liquid { background: linear-gradient(135deg, #e8eaf0, #c7cdf5); border: 2px solid rgba(99,102,241,0.3); }
 
-/* ========== АДАПТИВ ========== */
-
-/* Планшеты и небольшие ноутбуки (768px - 1024px) */
+/* Адаптив */
 @media (max-width: 1024px) {
   :root {
     --bento-cols: 1fr 1fr;
@@ -754,23 +831,11 @@ body {
     --prog-gap: 14px;
     --prog-padding: 16px 18px;
   }
-  .card-timer {
-    grid-column: 1 / -1;
-    grid-row: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .timer-mode { max-width: 300px; }
-  .presets { grid-template-columns: repeat(4, 1fr); max-width: 400px; }
-  .timer-controls { flex-direction: row; flex-wrap: wrap; max-width: 400px; }
-  .timer-controls .t-btn { flex: 1; min-width: 100px; }
+  .card-timer { grid-column: 1 / -1; grid-row: auto; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; }
   .card-progress { grid-column: 1 / -1; }
   .card-exercises { grid-column: 1 / -1; }
 }
 
-/* Планшеты вертикальные (480px - 768px) */
 @media (max-width: 768px) {
   :root {
     --bento-cols: 1fr;
@@ -792,13 +857,7 @@ body {
   .top-row { flex-direction: column; align-items: stretch; gap: 10px; }
   .brand-block { justify-content: space-between; width: 100%; }
   .streak-days-block { width: 100%; justify-content: space-between; }
-  .card-timer {
-    flex-direction: column;
-    align-items: center;
-  }
-  .timer-mode { max-width: 100%; }
-  .presets { max-width: 100%; }
-  .timer-controls { max-width: 100%; }
+  .card-timer { flex-direction: column; align-items: center; }
   .bottom-row { flex-direction: column; align-items: stretch; }
   .bottom-left { flex-direction: column; align-items: stretch; }
   .bottom-left > * { width: 100%; }
@@ -807,7 +866,6 @@ body {
   .settings-btn { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 18px; }
 }
 
-/* Телефоны (до 480px) */
 @media (max-width: 480px) {
   :root {
     --page-padding: 10px;
@@ -840,8 +898,6 @@ body {
   .prog-stats { gap: 10px; }
   .prog-stat { font-size: 10px; }
   .timer-mode-btn { font-size: 10px; padding: 5px 6px; }
-  .presets { gap: 4px; }
-  .preset-pill { font-size: 10px; padding: 5px 3px; }
   .t-btn { font-size: 11px; padding: 8px; }
   .ex-name { font-size: 12px; }
   .ex-target { font-size: 9px; padding: 1px 6px; }
@@ -856,9 +912,11 @@ body {
   .modal-field input, .modal-field select { font-size: 13px; padding: 8px 10px; }
   .btn { font-size: 11px; padding: 7px 14px; }
   .theme-option { width: 38px; height: 38px; border-radius: 12px; }
+  .ap-btn { font-size: 11px; padding: 6px 10px; }
+  .approach-timer-display { font-size: 20px; }
+  .rest-timer-display { font-size: 18px; }
 }
 
-/* Очень маленькие телефоны (до 360px) */
 @media (max-width: 360px) {
   :root {
     --h1-size: 26px;
@@ -874,7 +932,7 @@ body {
   .day-pill { padding: 4px 8px; font-size: 10px; }
   .timer-controls { gap: 4px; }
   .t-btn { padding: 7px; font-size: 10px; }
-  .ex-card { gap: 2px 4px; }
+  .ex-card { gap: 4px; }
   .set-dot { width: 24px; height: 24px; font-size: 10px; }
 }
 </style>
@@ -943,7 +1001,8 @@ body {
       </div>
     </div>
 
-    <div class="card card-timer">
+    <!-- Отдельная карточка таймера (скрыта по умолчанию) -->
+    <div class="card card-timer" id="timerCard" style="display:none;">
       <div class="timer-mode">
         <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
         <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
@@ -959,12 +1018,6 @@ body {
             <div class="timer-digits" id="timer-display">01:30</div>
             <div class="timer-label">отдых</div>
           </div>
-        </div>
-        <div class="presets">
-          <button class="preset-pill" onclick="setTimer(60)">1 мин</button>
-          <button class="preset-pill" onclick="setTimer(90)">1:30</button>
-          <button class="preset-pill" onclick="setTimer(120)">2 мин</button>
-          <button class="preset-pill" onclick="setTimer(180)">3 мин</button>
         </div>
         <div class="timer-controls">
           <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
@@ -1036,6 +1089,12 @@ function openSettings() {
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal" style="max-width:420px">
         <h3>⚙ Настройки</h3>
+        <div class="modal-field">
+          <label>Таймер</label>
+          <button class="btn" onclick="toggleTimerCardVisibility();closeModal();">
+            ${showTimerCard ? 'Убрать в панель подходов' : 'Показать отдельным окном'}
+          </button>
+        </div>
         <div class="modal-field">
           <label>Тема</label>
           <div class="theme-options">
@@ -1123,6 +1182,21 @@ function savePlan(plan) { localStorage.setItem(STORAGE_PLAN, JSON.stringify(plan
 let PLAN = loadPlan();
 let currentDay = 0;
 
+// ── Подходы и отдых ──
+let activeApproach = null;
+let restInterval = null;
+let restSecondsLeft = 0;
+let showTimerCard = false;
+
+function getRestTime() { return localStorage.getItem('restTime') || 90; }
+function saveRestTime(sec) { localStorage.setItem('restTime', sec); }
+
+function toggleTimerCardVisibility() {
+  showTimerCard = !showTimerCard;
+  document.getElementById('timerCard').style.display = showTimerCard ? 'flex' : 'none';
+  localStorage.setItem('showTimerCard', showTimerCard);
+}
+
 const sk = (d,e) => `wt2_d${d}_e${e}`;
 const wk = (d,e) => `wt2_d${d}_e${e}_w`;
 const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
@@ -1204,16 +1278,35 @@ function renderExercises() {
       const weight = localStorage.getItem(wk(di,ei)) || '';
       let dots = '';
       for (let s = 0; s < ex.sets; s++)
-        dots += `<button class="set-dot${state[s]?' done':''}" onclick="toggleSet(${di},${ei},${s})">${s+1}</button>`;
+        dots += `<div class="set-dot${state[s]?' done':''}">${s+1}</div>`;
       exHTML += `
         <div class="ex-card${state.every(Boolean)?' completed':''}" id="ex-${di}-${ei}">
-          <span class="ex-name">${ex.name}</span>
-          <span class="ex-target">${ex.target}</span>
-          <div class="ex-controls">${dots}</div>
-          <div class="ex-weight">
-            <span class="kg-label">кг</span>
-            <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
-              oninput="localStorage.setItem('${wk(di,ei)}',this.value)">
+          <div class="ex-main">
+            <span class="ex-name">${ex.name}</span>
+            <span class="ex-target">${ex.target}</span>
+            <div class="ex-controls">${dots}</div>
+            <div class="ex-weight">
+              <span class="kg-label">кг</span>
+              <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
+                oninput="localStorage.setItem('${wk(di,ei)}',this.value)" id="weight-${di}-${ei}">
+            </div>
+          </div>
+          <div class="approach-panel" id="approach-${di}-${ei}">
+            <div class="approach-timer">
+              <span class="approach-timer-label">⏱ Подход</span>
+              <span class="approach-timer-display" id="ap-display-${di}-${ei}">00:00</span>
+            </div>
+            <div class="approach-controls">
+              <button class="ap-btn start" onclick="startApproach(${di},${ei})">▶ Начать подход</button>
+              <button class="ap-btn finish" onclick="finishApproach(${di},${ei})" disabled>✓ Завершить</button>
+            </div>
+            <div class="approach-rest" id="rest-panel-${di}-${ei}" style="display:none;">
+              <span class="rest-label">Отдых (сек)</span>
+              <div class="rest-row">
+                <input type="number" class="rest-input" value="${getRestTime()}" min="10" max="600" step="5" id="rest-input-${di}-${ei}" onchange="saveRestTime(this.value)">
+                <span class="rest-timer-display" id="rest-display-${di}-${ei}">--:--</span>
+              </div>
+            </div>
           </div>
         </div>`;
     });
@@ -1239,6 +1332,7 @@ function switchDay(day) {
 function toggleSet(day, ei, s) {
   const state = loadSt(day, ei, PLAN[day].exercises[ei].sets);
   state[s] = !state[s]; saveSt(day, ei, state);
+  // Обновляем только квадратики
   const el = document.getElementById(`ex-${day}-${ei}`);
   el.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
   el.querySelectorAll('.set-dot').forEach((b,i) => b.className = 'set-dot'+(state[i]?' done':''));
@@ -1268,6 +1362,89 @@ function resetDay() {
   renderExercises();
 }
 
+// ── APPROACH LOGIC ──
+function startApproach(di, ei) {
+  const panel = document.getElementById(`approach-${di}-${ei}`);
+  const display = document.getElementById(`ap-display-${di}-${ei}`);
+  const finishBtn = panel.querySelector('.ap-btn.finish');
+  const restPanel = document.getElementById(`rest-panel-${di}-${ei}`);
+  
+  if (restInterval) clearInterval(restInterval);
+  if (restPanel) restPanel.style.display = 'none';
+  
+  const startTime = Date.now();
+  activeApproach = { di, ei, startTime, interval: setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    display.textContent = fmt(elapsed);
+  }, 200) };
+  
+  finishBtn.disabled = false;
+  panel.querySelector('.ap-btn.start').disabled = true;
+}
+
+function finishApproach(di, ei) {
+  if (!activeApproach || activeApproach.di !== di || activeApproach.ei !== ei) return;
+  
+  clearInterval(activeApproach.interval);
+  activeApproach = null;
+  
+  const panel = document.getElementById(`approach-${di}-${ei}`);
+  panel.querySelector('.ap-btn.start').disabled = false;
+  panel.querySelector('.ap-btn.finish').disabled = true;
+  
+  // Отмечаем следующий незаполненный квадратик
+  const state = loadSt(di, ei, PLAN[di].exercises[ei].sets);
+  const nextIdx = state.findIndex(s => !s);
+  if (nextIdx !== -1) {
+    toggleSet(di, ei, nextIdx);
+  }
+  
+  const updatedState = loadSt(di, ei, PLAN[di].exercises[ei].sets);
+  if (!updatedState.every(Boolean) && !showTimerCard) {
+    startRestTimer(di, ei);
+  } else if (showTimerCard && !updatedState.every(Boolean)) {
+    setTimer(parseInt(getRestTime()));
+  }
+}
+
+function startRestTimer(di, ei) {
+  const restPanel = document.getElementById(`rest-panel-${di}-${ei}`);
+  const restDisplay = document.getElementById(`rest-display-${di}-${ei}`);
+  const restInput = document.getElementById(`rest-input-${di}-${ei}`);
+  
+  restPanel.style.display = 'flex';
+  restSecondsLeft = parseInt(restInput.value) || 90;
+  restDisplay.textContent = fmt(restSecondsLeft);
+  
+  if (restInterval) clearInterval(restInterval);
+  restInterval = setInterval(() => {
+    restSecondsLeft--;
+    restDisplay.textContent = fmt(restSecondsLeft);
+    if (restSecondsLeft <= 0) {
+      clearInterval(restInterval);
+      restDisplay.textContent = '✓ ГОТОВО';
+      playSound();
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    }
+  }, 1000);
+}
+
+function playSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.value = 0.3;
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    osc.stop(ctx.currentTime + 0.5);
+  } catch(e) {}
+}
+
+// ── DAY EDITOR ──
 function openDayEditor(di) {
   const day = PLAN[di];
   let exRows = day.exercises.map((ex) => `
@@ -1338,6 +1515,7 @@ function saveDayEdit(di) {
 
 function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
 
+// ── PRESETS ──
 function getPresets() { try { const r = localStorage.getItem(STORAGE_PRESETS); return r ? JSON.parse(r) : {}; } catch { return {}; } }
 function savePresets(p) { localStorage.setItem(STORAGE_PRESETS, JSON.stringify(p)); }
 function savePreset() {
@@ -1375,13 +1553,16 @@ function renderAll() {
   updateStreakUI();
 }
 
+// ── INIT ──
+showTimerCard = localStorage.getItem('showTimerCard') === 'true';
+document.getElementById('timerCard').style.display = showTimerCard ? 'flex' : 'none';
 applyTheme(getTheme());
 renderAll();
 updateProgress(currentDay);
 
 // ── TIMER ──
 function switchClock(m) {
-  document.querySelectorAll('.timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='timer')||(i===1&&m==='sw')));
+  document.querySelectorAll('#timerCard .timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='timer')||(i===1&&m==='sw')));
   document.getElementById('panel-timer').style.display = m==='timer'?'flex':'none';
   document.getElementById('panel-sw').style.display = m==='sw'?'flex':'none';
 }
@@ -1400,7 +1581,7 @@ function toggleTimer() {
     d.textContent = fmt(timerLeft);
     d.className = 'timer-digits'+(timerLeft<=10&&timerLeft>0?' warning':timerLeft<=0?' done':'');
     updateTimerRing();
-    if (timerLeft<=0) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; }
+    if (timerLeft<=0) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; playSound(); if (navigator.vibrate) navigator.vibrate([200,100,200]); }
   }, 1000);
 }
 function resetTimer() { clearInterval(timerInt); timerOn=false; timerLeft=timerTotal; document.getElementById('timer-display').textContent=fmt(timerTotal); document.getElementById('timer-display').className='timer-digits'; document.getElementById('timer-btn').textContent='Старт'; updateTimerRing(); }
