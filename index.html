@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тренировки</title>
+<title>Тренировки · Стрик & Кастомизация</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -38,13 +38,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Blobs */
 .blob { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
 .blob-1 { width: 700px; height: 500px; top: -200px; left: -200px; background: radial-gradient(ellipse, rgba(180,40,120,0.32) 0%, transparent 70%); }
 .blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: radial-gradient(ellipse, rgba(255,100,50,0.22) 0%, transparent 70%); }
 .blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: radial-gradient(ellipse, rgba(255,160,80,0.1) 0%, transparent 65%); }
 
-/* Background symbols */
 .bg-symbols { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .bg-sym {
   position: absolute;
@@ -59,10 +57,8 @@ body {
   50%      { transform: translateY(-16px) rotate(var(--r1)); }
 }
 
-/* Page */
 .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 
-/* Header */
 .page-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
@@ -75,7 +71,6 @@ body {
 }
 .header-left p { font-size: 12px; color: var(--muted); margin-top: 3px; letter-spacing: 0.4px; }
 
-/* Day pills */
 .day-pills { display: flex; gap: 8px; flex-wrap: wrap; }
 .day-pill {
   padding: 9px 18px; border-radius: var(--r-pill);
@@ -94,7 +89,30 @@ body {
   box-shadow: 0 2px 18px var(--glow);
 }
 
-/* Bento grid */
+/* Streak banner */
+.streak-banner {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, rgba(255,126,95,0.18), rgba(255,180,80,0.12));
+  border: 1px solid rgba(255,150,80,0.25);
+  border-radius: var(--r-pill);
+  padding: 8px 16px;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  margin-bottom: 20px;
+  width: fit-content;
+}
+.streak-icon { font-size: 22px; animation: pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+.streak-text { font-size: 13px; font-weight: 500; color: var(--text); }
+.streak-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  background: linear-gradient(135deg, #fff, #ffb347);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1;
+}
+
+/* Bento */
 .bento {
   display: grid;
   grid-template-columns: 1fr 1fr 300px;
@@ -102,7 +120,6 @@ body {
   gap: 14px;
 }
 
-/* Glass card base */
 .card {
   background: var(--glass);
   backdrop-filter: var(--blur);
@@ -113,7 +130,6 @@ body {
 }
 .card:hover { border-color: rgba(255,255,255,0.16); }
 
-/* Progress card — top left, spans 2 cols */
 .card-progress {
   grid-column: 1 / 3;
   padding: 22px 26px;
@@ -148,7 +164,6 @@ body {
 .prog-stat { font-size: 12px; color: var(--muted); }
 .prog-stat span { color: var(--text); font-weight: 500; }
 
-/* Timer card — top right, spans 2 rows */
 .card-timer {
   grid-column: 3;
   grid-row: 1 / 3;
@@ -156,7 +171,6 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 16px;
 }
 
-/* Timer mode toggle */
 .timer-mode { display: flex; background: rgba(0,0,0,0.2); border-radius: var(--r-pill); padding: 3px; gap: 0; width: 100%; }
 .timer-mode-btn {
   flex: 1; padding: 7px 10px; border-radius: var(--r-pill);
@@ -170,7 +184,6 @@ body {
   box-shadow: 0 1px 8px var(--glow);
 }
 
-/* Circular timer */
 .timer-ring-wrap { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
 .timer-ring-wrap svg { transform: rotate(-90deg); }
 .tr-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
@@ -221,7 +234,6 @@ body {
 .lap-item { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 4px 2px; border-bottom: 0.5px solid var(--border); }
 .lap-item:last-child { border-bottom: none; }
 
-/* Tips card */
 .card-tips {
   display: flex; align-items: flex-start; gap: 14px;
   padding: 18px 22px;
@@ -232,7 +244,6 @@ body {
 .tips-body p { font-size: 12px; color: var(--muted); line-height: 1.9; }
 .tips-body strong { color: var(--text); font-weight: 500; }
 
-/* Exercises area */
 .card-exercises { padding: 22px 22px 18px; grid-column: 1 / 3; }
 
 .day-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
@@ -242,6 +253,13 @@ body {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .day-count { font-size: 12px; color: var(--muted); }
+.edit-day-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer; padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: 13px; transition: all 0.2s;
+  margin-left: auto;
+}
+.edit-day-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
 .exercise-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -306,7 +324,11 @@ body {
 .kg-input::placeholder { color: var(--muted); }
 
 /* Bottom row */
-.bento-bottom { display: flex; justify-content: flex-end; margin-top: 14px; }
+.bento-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 14px; flex-wrap: wrap; gap: 10px;
+}
+.bottom-left { display: flex; gap: 10px; align-items: center; }
 .reset-pill {
   padding: 9px 22px; border-radius: var(--r-pill);
   background: rgba(255,80,80,0.07);
@@ -317,7 +339,70 @@ body {
 }
 .reset-pill:hover { background: rgba(255,80,80,0.14); border-color: rgba(255,100,100,0.4); color: #ff9090; }
 
-/* Mobile */
+.save-preset-btn {
+  padding: 9px 22px; border-radius: var(--r-pill);
+  background: rgba(255,180,80,0.08);
+  border: 1px solid rgba(255,180,80,0.2);
+  color: var(--accent2);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.save-preset-btn:hover { background: rgba(255,180,80,0.16); border-color: var(--accent); }
+
+.preset-select {
+  background: var(--glass); border: 1px solid var(--border);
+  color: var(--text); padding: 8px 14px; border-radius: var(--r-pill);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  backdrop-filter: var(--blur); cursor: pointer;
+}
+
+.complete-day-btn {
+  padding: 9px 22px; border-radius: var(--r-pill);
+  background: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(39,174,96,0.15));
+  border: 1px solid rgba(46,204,113,0.35);
+  color: #2ecc71;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+}
+.complete-day-btn:hover { background: rgba(46,204,113,0.25); border-color: #2ecc71; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: #1a1025; border: 1px solid var(--border-h);
+  border-radius: var(--r-xl); padding: 28px; max-width: 600px; width: 90%;
+  max-height: 80vh; overflow-y: auto;
+}
+.modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--accent2); margin-bottom: 20px; }
+.modal-field { margin-bottom: 14px; }
+.modal-field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-field input, .modal-field select {
+  width: 100%; padding: 10px 14px; border-radius: var(--r-md);
+  border: 1px solid var(--border); background: rgba(0,0,0,0.3);
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
+}
+.modal-field input:focus { outline: none; border-color: var(--accent); }
+.exercise-edit-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.exercise-edit-row input { flex: 1; }
+.exercise-edit-row .small { width: 60px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+.btn {
+  padding: 10px 22px; border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--glass);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn:hover { background: var(--glass-h); }
+.btn.accent { background: linear-gradient(135deg, rgba(255,126,95,0.38), rgba(200,60,60,0.38)); border-color: var(--border-h); }
+.btn.green { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.4); color: #2ecc71; }
+.btn.red { background: rgba(255,80,80,0.15); border-color: rgba(255,100,100,0.3); color: #ff9090; }
+
 @media (max-width: 860px) {
   .bento { grid-template-columns: 1fr; }
   .card-progress { grid-column: 1; }
@@ -331,39 +416,7 @@ body {
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
-
 <div class="bg-symbols" id="bgSymbols"></div>
-
-<script>
-(function(){
-  const syms = ['✦','◈','⊕','✗','▲','◇','⬡','⊞','✚','◉','⌬','⊿','✕','△','◻','⬢','╋','⋆','✧','◆','⟡','⬟','✱','⌀'];
-  const container = document.getElementById('bgSymbols');
-  const count = 28;
-  for(let i=0;i<count;i++){
-    const el = document.createElement('div');
-    el.className = 'bg-sym';
-    const sym = syms[Math.floor(Math.random()*syms.length)];
-    const size = 18 + Math.random()*90;
-    const x = Math.random()*100;
-    const y = Math.random()*100;
-    const dur = 5 + Math.random()*8;
-    const delay = -Math.random()*10;
-    const r0 = (Math.random()*40-20).toFixed(1)+'deg';
-    const r1 = (Math.random()*40-20).toFixed(1)+'deg';
-    const op = (0.12 + Math.random()*0.18).toFixed(3);
-    el.textContent = sym;
-    el.style.cssText = `
-      left:${x}%; top:${y}%;
-      font-size:${size}px;
-      opacity:${op};
-      --r0:${r0}; --r1:${r1};
-      animation-duration:${dur}s;
-      animation-delay:${delay}s;
-    `;
-    container.appendChild(el);
-  }
-})();
-</script>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -379,25 +432,23 @@ body {
 </svg>
 
 <div class="page">
-
-  <!-- Header -->
   <div class="page-header">
     <div class="header-left">
       <h1>ТРЕНИРОВКИ</h1>
       <p>Набор массы · Дома · Гантели + Турник</p>
     </div>
-    <div class="day-pills">
-      <button class="day-pill active" onclick="switchDay(0)">Пн · Грудь</button>
-      <button class="day-pill" onclick="switchDay(1)">Ср · Спина</button>
-      <button class="day-pill" onclick="switchDay(2)">Пт · Ноги</button>
-      <button class="day-pill" onclick="switchDay(3)">Сб · Фулл</button>
-    </div>
+    <div class="day-pills" id="dayPills"></div>
   </div>
 
-  <!-- Bento -->
-  <div class="bento">
+  <!-- Streak banner -->
+  <div class="streak-banner" id="streakBanner">
+    <span class="streak-icon">🔥</span>
+    <span class="streak-text">Серия</span>
+    <span class="streak-num" id="streakNum">0</span>
+    <span class="streak-text">дней</span>
+  </div>
 
-    <!-- Progress card -->
+  <div class="bento">
     <div class="card card-progress">
       <div class="prog-ring-wrap">
         <svg width="80" height="80" viewBox="0 0 80 80">
@@ -423,14 +474,11 @@ body {
       </div>
     </div>
 
-    <!-- Timer card -->
     <div class="card card-timer">
       <div class="timer-mode">
         <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
         <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
       </div>
-
-      <!-- Countdown -->
       <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%">
         <div class="timer-ring-wrap">
           <svg width="160" height="160" viewBox="0 0 160 160">
@@ -454,8 +502,6 @@ body {
           <button class="t-btn" onclick="resetTimer()">Сброс</button>
         </div>
       </div>
-
-      <!-- Stopwatch -->
       <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:14px;width:100%">
         <div class="timer-ring-wrap">
           <svg width="160" height="160" viewBox="0 0 160 160">
@@ -477,9 +523,7 @@ body {
         </div>
         <div class="laps-box" id="laps-list"></div>
       </div>
-
       <div style="width:100%;height:1px;background:var(--border)"></div>
-
       <div style="width:100%">
         <p style="font-size:11px;color:var(--muted);line-height:1.9">
           <strong style="color:var(--text)">Отдых:</strong> 90–120 сек базовые, 60 сек изоляция<br>
@@ -489,107 +533,211 @@ body {
       </div>
     </div>
 
-    <!-- Exercises card -->
-    <div class="card card-exercises">
-      <div class="day" id="day-0">
-        <div class="day-header">
-          <span class="day-name">ГРУДЬ / ТРИЦЕПС</span>
-          <span class="day-count">Понедельник · 5 упражнений</span>
-        </div>
-        <div class="exercise-list" id="exercises-0"></div>
-      </div>
-      <div class="day" id="day-1" style="display:none">
-        <div class="day-header">
-          <span class="day-name">СПИНА / БИЦЕПС</span>
-          <span class="day-count">Среда · 5 упражнений</span>
-        </div>
-        <div class="exercise-list" id="exercises-1"></div>
-      </div>
-      <div class="day" id="day-2" style="display:none">
-        <div class="day-header">
-          <span class="day-name">НОГИ / ПЛЕЧИ</span>
-          <span class="day-count">Пятница · 5 упражнений</span>
-        </div>
-        <div class="exercise-list" id="exercises-2"></div>
-      </div>
-      <div class="day" id="day-3" style="display:none">
-        <div class="day-header">
-          <span class="day-name">ПОЛНОЕ ТЕЛО</span>
-          <span class="day-count">Суббота · 5 упражнений</span>
-        </div>
-        <div class="exercise-list" id="exercises-3"></div>
-      </div>
-    </div>
-
+    <div class="card card-exercises" id="exercisesContainer"></div>
   </div>
 
   <div class="bento-bottom">
-    <button class="reset-pill" onclick="resetDay()">Сбросить день</button>
+    <div class="bottom-left">
+      <button class="complete-day-btn" onclick="completeDay()">✓ Завершить день</button>
+      <button class="save-preset-btn" onclick="savePreset()">💾 Сохранить пресет</button>
+      <select class="preset-select" id="presetSelect" onchange="loadPreset(this.value)">
+        <option value="">— Загрузить пресет —</option>
+      </select>
+    </div>
+    <div>
+      <button class="reset-pill" onclick="resetDay()">Сбросить день</button>
+    </div>
   </div>
-
 </div>
 
+<div id="modalContainer"></div>
+
 <script>
-const PLAN = [
-  { exercises: [
-    { name: "Отжимания широкие", sets: 4, target: "12–15 повт." },
-    { name: "Жим гантелей лёжа на полу", sets: 4, target: "10–12 повт." },
-    { name: "Разводка гантелей лёжа", sets: 3, target: "12 повт." },
-    { name: "Отжимания узкие (трицепс)", sets: 3, target: "12 повт." },
-    { name: "Французский жим с гантелью", sets: 3, target: "12 повт." },
-  ]},
-  { exercises: [
-    { name: "Подтягивания широкие", sets: 4, target: "макс. повт." },
-    { name: "Подтягивания обратным хватом", sets: 4, target: "макс. повт." },
-    { name: "Тяга гантели в наклоне", sets: 4, target: "10–12 повт. / рука" },
-    { name: "Сгибания на бицепс", sets: 3, target: "12 повт." },
-    { name: "Молотковые сгибания", sets: 3, target: "12 повт." },
-  ]},
-  { exercises: [
-    { name: "Приседания с гантелями", sets: 4, target: "15 повт." },
-    { name: "Выпады с гантелями", sets: 3, target: "12 повт. / нога" },
-    { name: "Румынская тяга с гантелями", sets: 4, target: "12 повт." },
-    { name: "Жим гантелей сидя над головой", sets: 4, target: "12 повт." },
-    { name: "Подъём гантелей в стороны", sets: 3, target: "15 повт." },
-  ]},
-  { exercises: [
-    { name: "Подтягивания", sets: 5, target: "макс. повт." },
-    { name: "Отжимания с ногами на возвышении", sets: 4, target: "12 повт." },
-    { name: "Болгарские приседания с гантелями", sets: 3, target: "10 повт. / нога" },
-    { name: "Тяга гантелей к подбородку", sets: 3, target: "12 повт." },
-    { name: "Планка", sets: 3, target: "45–60 сек." },
-  ]},
+(function(){
+  const syms = ['✦','◈','⊕','✗','▲','◇','⬡','⊞','✚','◉','⌬','⊿','✕','△','◻','⬢','╋','⋆','✧','◆','⟡','⬟','✱','⌀'];
+  const container = document.getElementById('bgSymbols');
+  for(let i=0;i<28;i++){
+    const el = document.createElement('div');
+    el.className = 'bg-sym';
+    const sym = syms[Math.floor(Math.random()*syms.length)];
+    const size = 18 + Math.random()*90;
+    const x = Math.random()*100;
+    const y = Math.random()*100;
+    const dur = 5 + Math.random()*8;
+    const delay = -Math.random()*10;
+    const r0 = (Math.random()*40-20).toFixed(1)+'deg';
+    const r1 = (Math.random()*40-20).toFixed(1)+'deg';
+    const op = (0.12 + Math.random()*0.18).toFixed(3);
+    el.textContent = sym;
+    el.style.cssText = `left:${x}%; top:${y}%; font-size:${size}px; opacity:${op}; --r0:${r0}; --r1:${r1}; animation-duration:${dur}s; animation-delay:${delay}s;`;
+    container.appendChild(el);
+  }
+})();
+
+// ── STATE ──
+const STORAGE_PLAN = 'customPlan';
+const STORAGE_PRESETS = 'planPresets';
+const STORAGE_STREAK = 'streakData';
+
+const DEFAULT_PLAN = [
+  {
+    name: 'ГРУДЬ / ТРИЦЕПС',
+    short: 'Пн · Грудь',
+    exercises: [
+      { name: "Отжимания широкие", sets: 4, target: "12–15 повт." },
+      { name: "Жим гантелей лёжа на полу", sets: 4, target: "10–12 повт." },
+      { name: "Разводка гантелей лёжа", sets: 3, target: "12 повт." },
+      { name: "Отжимания узкие (трицепс)", sets: 3, target: "12 повт." },
+      { name: "Французский жим с гантелью", sets: 3, target: "12 повт." },
+    ]
+  },
+  {
+    name: 'СПИНА / БИЦЕПС',
+    short: 'Ср · Спина',
+    exercises: [
+      { name: "Подтягивания широкие", sets: 4, target: "макс. повт." },
+      { name: "Подтягивания обратным хватом", sets: 4, target: "макс. повт." },
+      { name: "Тяга гантели в наклоне", sets: 4, target: "10–12 повт. / рука" },
+      { name: "Сгибания на бицепс", sets: 3, target: "12 повт." },
+      { name: "Молотковые сгибания", sets: 3, target: "12 повт." },
+    ]
+  },
+  {
+    name: 'НОГИ / ПЛЕЧИ',
+    short: 'Пт · Ноги',
+    exercises: [
+      { name: "Приседания с гантелями", sets: 4, target: "15 повт." },
+      { name: "Выпады с гантелями", sets: 3, target: "12 повт. / нога" },
+      { name: "Румынская тяга с гантелями", sets: 4, target: "12 повт." },
+      { name: "Жим гантелей сидя над головой", sets: 4, target: "12 повт." },
+      { name: "Подъём гантелей в стороны", sets: 3, target: "15 повт." },
+    ]
+  },
+  {
+    name: 'ПОЛНОЕ ТЕЛО',
+    short: 'Сб · Фулл',
+    exercises: [
+      { name: "Подтягивания", sets: 5, target: "макс. повт." },
+      { name: "Отжимания с ногами на возвышении", sets: 4, target: "12 повт." },
+      { name: "Болгарские приседания с гантелями", sets: 3, target: "10 повт. / нога" },
+      { name: "Тяга гантелей к подбородку", sets: 3, target: "12 повт." },
+      { name: "Планка", sets: 3, target: "45–60 сек." },
+    ]
+  }
 ];
 
+function loadPlan() {
+  try {
+    const raw = localStorage.getItem(STORAGE_PLAN);
+    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_PLAN));
+  } catch { return JSON.parse(JSON.stringify(DEFAULT_PLAN)); }
+}
+function savePlan(plan) {
+  localStorage.setItem(STORAGE_PLAN, JSON.stringify(plan));
+}
+
+let PLAN = loadPlan();
 let currentDay = 0;
+
+// ── HELPERS ──
 const sk = (d,e) => `wt_d${d}_e${e}`;
 const wk = (d,e) => `wt_d${d}_e${e}_w`;
 const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
 const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
 
-function renderDay(day) {
-  const c = document.getElementById('exercises-' + day);
-  c.innerHTML = '';
-  PLAN[day].exercises.forEach((ex, ei) => {
-    const state = loadSt(day, ei, ex.sets);
-    const weight = localStorage.getItem(wk(day,ei)) || '';
-    const div = document.createElement('div');
-    div.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
-    div.id = `ex-${day}-${ei}`;
-    let dots = '';
-    for (let s = 0; s < ex.sets; s++)
-      dots += `<button class="set-dot${state[s]?' done':''}" onclick="toggleSet(${day},${ei},${s})">${s+1}</button>`;
-    div.innerHTML = `
-      <span class="ex-name">${ex.name}</span>
-      <span class="ex-target">${ex.target}</span>
-      <div class="ex-controls">${dots}</div>
-      <div class="ex-weight">
-        <span class="kg-label">кг</span>
-        <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
-          oninput="localStorage.setItem('${wk(day,ei)}',this.value)">
-      </div>`;
-    c.appendChild(div);
+// ── STREAK LOGIC ──
+function getStreak() {
+  try {
+    const raw = localStorage.getItem(STORAGE_STREAK);
+    return raw ? JSON.parse(raw) : { streak: 0, lastDate: null };
+  } catch { return { streak: 0, lastDate: null }; }
+}
+function saveStreak(data) {
+  localStorage.setItem(STORAGE_STREAK, JSON.stringify(data));
+}
+function updateStreakUI() {
+  const s = getStreak();
+  document.getElementById('streakNum').textContent = s.streak;
+}
+function completeDay() {
+  const s = getStreak();
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  if (s.lastDate === today) {
+    alert('Ты уже отметил сегодняшнюю тренировку! 🔥');
+    return;
+  }
+
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (s.lastDate === yesterday) {
+    s.streak += 1;
+  } else if (s.lastDate !== today) {
+    s.streak = 1;
+  }
+  s.lastDate = today;
+  saveStreak(s);
+  updateStreakUI();
+  alert(`День засчитан! Стрик: ${s.streak} дн. 🔥`);
+}
+
+// ── RENDER ──
+function renderDayPills() {
+  const container = document.getElementById('dayPills');
+  container.innerHTML = '';
+  PLAN.forEach((day, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-pill' + (i === currentDay ? ' active' : '');
+    btn.textContent = day.short;
+    btn.onclick = () => switchDay(i);
+    container.appendChild(btn);
   });
+}
+
+function renderExercises() {
+  const container = document.getElementById('exercisesContainer');
+  container.innerHTML = '';
+  PLAN.forEach((day, di) => {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+    dayDiv.id = `day-${di}`;
+    dayDiv.style.display = di === currentDay ? 'block' : 'none';
+
+    let exHTML = '';
+    day.exercises.forEach((ex, ei) => {
+      const state = loadSt(di, ei, ex.sets);
+      const weight = localStorage.getItem(wk(di,ei)) || '';
+      let dots = '';
+      for (let s = 0; s < ex.sets; s++)
+        dots += `<button class="set-dot${state[s]?' done':''}" onclick="toggleSet(${di},${ei},${s})">${s+1}</button>`;
+      exHTML += `
+        <div class="ex-card${state.every(Boolean)?' completed':''}" id="ex-${di}-${ei}">
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-target">${ex.target}</span>
+          <div class="ex-controls">${dots}</div>
+          <div class="ex-weight">
+            <span class="kg-label">кг</span>
+            <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
+              oninput="localStorage.setItem('${wk(di,ei)}',this.value)">
+          </div>
+        </div>`;
+    });
+
+    dayDiv.innerHTML = `
+      <div class="day-header">
+        <span class="day-name">${day.name}</span>
+        <span class="day-count">${day.exercises.length} упражнений</span>
+        <button class="edit-day-btn" onclick="openDayEditor(${di})">✎ Ред.</button>
+      </div>
+      <div class="exercise-list">${exHTML}</div>`;
+    container.appendChild(dayDiv);
+  });
+  updateProgress(currentDay);
+}
+
+function switchDay(day) {
+  currentDay = day;
+  document.querySelectorAll('.day').forEach((d,i) => d.style.display = i===day?'block':'none');
+  document.querySelectorAll('.day-pill').forEach((t,i) => t.classList.toggle('active', i===day));
   updateProgress(day);
 }
 
@@ -619,30 +767,172 @@ function updateProgress(day) {
   document.getElementById('prog-sub').textContent = pct===100 ? 'Отличная работа!' : `${done} из ${total} подходов`;
 }
 
-function switchDay(day) {
-  currentDay = day;
-  document.querySelectorAll('.day').forEach((d,i) => d.style.display = i===day?'block':'none');
-  document.querySelectorAll('.day-pill').forEach((t,i) => t.classList.toggle('active', i===day));
-  updateProgress(day);
-}
-
 function resetDay() {
   if (!confirm('Сбросить прогресс этого дня?')) return;
   PLAN[currentDay].exercises.forEach((_,ei) => localStorage.removeItem(sk(currentDay,ei)));
-  renderDay(currentDay);
+  renderExercises();
 }
 
-PLAN.forEach((_,i) => renderDay(i));
-updateProgress(0);
+// ── DAY EDITOR ──
+function openDayEditor(di) {
+  const day = PLAN[di];
+  const modal = document.getElementById('modalContainer');
+  let exRows = day.exercises.map((ex,ei) => `
+    <div class="exercise-edit-row">
+      <input type="text" value="${ex.name}" placeholder="Название" data-ei="${ei}" class="ex-name-inp">
+      <input type="number" value="${ex.sets}" placeholder="Подходы" class="small ex-sets-inp" data-ei="${ei}" min="1" max="20">
+      <input type="text" value="${ex.target}" placeholder="Цель" class="ex-target-inp" data-ei="${ei}">
+      <button class="btn red" onclick="removeExRow(this,${di},${ei})">✕</button>
+    </div>`).join('');
 
-// Clock
+  modal.innerHTML = `
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <h3>Редактировать: ${day.name}</h3>
+        <div class="modal-field">
+          <label>Название дня</label>
+          <input type="text" id="editDayName" value="${day.name}">
+        </div>
+        <div class="modal-field">
+          <label>Короткое имя (для кнопки)</label>
+          <input type="text" id="editDayShort" value="${day.short}">
+        </div>
+        <div class="modal-field">
+          <label>Упражнения</label>
+          <div id="exRowsContainer">${exRows}</div>
+          <button class="btn green" onclick="addExRow(${di})" style="margin-top:8px">+ Добавить упражнение</button>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" onclick="closeModal()">Отмена</button>
+          <button class="btn accent" onclick="saveDayEdit(${di})">Сохранить</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addExRow(di) {
+  const container = document.getElementById('exRowsContainer');
+  const idx = container.children.length;
+  const row = document.createElement('div');
+  row.className = 'exercise-edit-row';
+  row.innerHTML = `
+    <input type="text" value="" placeholder="Название" data-ei="${idx}" class="ex-name-inp">
+    <input type="number" value="3" placeholder="Подходы" class="small ex-sets-inp" data-ei="${idx}" min="1" max="20">
+    <input type="text" value="" placeholder="Цель" class="ex-target-inp" data-ei="${idx}">
+    <button class="btn red" onclick="removeExRow(this,${di},${idx})">✕</button>`;
+  container.appendChild(row);
+}
+
+function removeExRow(btn, di, ei) {
+  btn.parentElement.remove();
+}
+
+function saveDayEdit(di) {
+  const name = document.getElementById('editDayName').value.trim();
+  const short = document.getElementById('editDayShort').value.trim();
+  if (!name || !short) { alert('Заполни название и короткое имя!'); return; }
+
+  const rows = document.querySelectorAll('#exRowsContainer .exercise-edit-row');
+  const exercises = [];
+  rows.forEach(row => {
+    const n = row.querySelector('.ex-name-inp').value.trim();
+    const s = parseInt(row.querySelector('.ex-sets-inp').value) || 3;
+    const t = row.querySelector('.ex-target-inp').value.trim();
+    if (n) exercises.push({ name: n, sets: s, target: t || 'повт.' });
+  });
+
+  if (exercises.length === 0) { alert('Добавь хотя бы одно упражнение!'); return; }
+
+  PLAN[di].name = name;
+  PLAN[di].short = short;
+  PLAN[di].exercises = exercises;
+  savePlan(PLAN);
+
+  // Clear old progress for this day (структура изменилась)
+  for (let i = 0; i < 20; i++) {
+    localStorage.removeItem(sk(di, i));
+    localStorage.removeItem(wk(di, i));
+  }
+
+  closeModal();
+  renderDayPills();
+  renderExercises();
+}
+
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
+}
+
+// ── PRESETS ──
+function getPresets() {
+  try {
+    const raw = localStorage.getItem(STORAGE_PRESETS);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function savePresets(presets) {
+  localStorage.setItem(STORAGE_PRESETS, JSON.stringify(presets));
+}
+
+function savePreset() {
+  const name = prompt('Название пресета:');
+  if (!name || !name.trim()) return;
+  const presets = getPresets();
+  presets[name.trim()] = JSON.parse(JSON.stringify(PLAN));
+  savePresets(presets);
+  renderPresetSelect();
+  alert(`Пресет «${name.trim()}» сохранён!`);
+}
+
+function loadPreset(name) {
+  if (!name) return;
+  if (!confirm(`Загрузить пресет «${name}»? Текущий план будет заменён, стрик сохранится.`)) {
+    document.getElementById('presetSelect').value = '';
+    return;
+  }
+  const presets = getPresets();
+  if (presets[name]) {
+    PLAN = JSON.parse(JSON.stringify(presets[name]));
+    savePlan(PLAN);
+    currentDay = 0;
+    renderDayPills();
+    renderExercises();
+    updateProgress(0);
+    document.getElementById('presetSelect').value = '';
+  }
+}
+
+function renderPresetSelect() {
+  const sel = document.getElementById('presetSelect');
+  const presets = getPresets();
+  sel.innerHTML = '<option value="">— Загрузить пресет —</option>';
+  Object.keys(presets).forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+}
+
+// ── INIT ──
+function init() {
+  renderDayPills();
+  renderExercises();
+  renderPresetSelect();
+  updateProgress(0);
+  updateStreakUI();
+}
+
+init();
+
+// ── TIMER & SW ──
 function switchClock(mode) {
   document.querySelectorAll('.timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&mode==='timer')||(i===1&&mode==='sw')));
   document.getElementById('panel-timer').style.display = mode==='timer'?'flex':'none';
   document.getElementById('panel-sw').style.display = mode==='sw'?'flex':'none';
 }
 
-// Timer
 const CIRC_T = 427.3;
 let timerTotal=90, timerLeft=90, timerInt=null, timerOn=false;
 const fmt = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
@@ -681,7 +971,6 @@ function resetTimer() {
   updateTimerRing();
 }
 
-// Stopwatch
 let swMs=0, swInt=null, swOn=false, swLaps=[], swLastLap=0;
 const fmtSW = ms => { const s=Math.floor(ms/1000),m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'.'+String(Math.floor((ms%1000)/10)).padStart(2,'0'); };
 
