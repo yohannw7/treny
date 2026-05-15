@@ -76,6 +76,7 @@
   --day-name-size: 26px;
   --ex-card-padding: 10px 14px;
   --ex-card-gap: 3px 10px;
+  --side-panel-width: 380px;
 }
 
 .theme-fire {
@@ -433,13 +434,156 @@ body {
 }
 .add-day-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(255,255,255,0.05); }
 
+/* Layout */
+.page-layout {
+  display: flex;
+  gap: var(--gap);
+  position: relative;
+}
 .bento {
   display: grid;
   grid-template-columns: var(--bento-cols);
   grid-template-rows: auto auto;
   gap: var(--gap);
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s;
 }
 
+/* Side panel */
+.side-panel-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 60; display: none;
+}
+.side-panel-overlay.open { display: block; }
+.side-panel {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--side-panel-width);
+  max-width: 90vw;
+  background: var(--bg);
+  border-right: 1px solid var(--border-h);
+  z-index: 70;
+  padding: 20px;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 10px 0 40px rgba(0,0,0,0.3);
+}
+.side-panel.open { transform: translateX(0); }
+.side-panel-close {
+  align-self: flex-end;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); width: 36px; height: 36px; border-radius: 50%;
+  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.side-panel-close:hover { border-color: var(--accent); color: var(--accent2); }
+.side-ex-name {
+  font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px;
+  background: var(--day-name-grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.side-ex-target { font-size: 13px; color: var(--muted); }
+
+/* Блок подходов в боковой панели */
+.side-sets-row {
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+}
+.side-set-dot {
+  width: 34px; height: 34px; border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.05);
+  color: var(--muted);
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s;
+}
+.side-set-dot.done {
+  background: var(--set-dot-done-bg);
+  border-color: var(--done-b);
+  color: #fff; font-weight: 600;
+  box-shadow: 0 2px 10px var(--glow);
+}
+.side-set-delete {
+  font-size: 11px; color: var(--muted); cursor: pointer;
+  background: none; border: 1px solid var(--border);
+  padding: 4px 10px; border-radius: var(--r-pill);
+  transition: all 0.2s;
+}
+.side-set-delete:hover { color: #ef4444; border-color: #ef4444; }
+
+/* Таймер в боковой панели */
+.side-timer-ring-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; align-self: center; }
+.side-timer-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+.side-tr-bg { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 6; }
+.side-tr-fill { fill: none; stroke: url(#timerGrad); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.9s linear; }
+.side-timer-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.side-timer-digits {
+  font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 2px; line-height: 1;
+  background: var(--timer-digits-grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.side-timer-digits.warning { background: var(--timer-digits-warn); -webkit-background-clip:text; background-clip:text; filter: drop-shadow(0 0 8px rgba(239,68,68,0.5)); }
+.side-timer-digits.done { background: var(--timer-digits-done); -webkit-background-clip:text; background-clip:text; }
+.side-timer-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+/* Отдых перед подходом */
+.side-rest-setup {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--glass); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 12px;
+}
+.side-rest-setup label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.side-rest-setup .rest-row { display: flex; gap: 8px; align-items: center; }
+.side-rest-input {
+  width: 70px; padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--input-bg);
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; text-align: center;
+}
+.side-rest-input:focus { outline: none; border-color: var(--accent); }
+
+/* Кнопки подходов */
+.side-approach-btns { display: flex; gap: 8px; }
+.side-ap-btn {
+  flex: 1; padding: 12px; border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+}
+.side-ap-btn.start {
+  background: var(--t-btn-primary-bg);
+  border-color: var(--t-btn-primary-border);
+  color: var(--t-btn-primary-color);
+}
+.side-ap-btn.finish {
+  background: rgba(0,0,0,0.08); color: var(--muted);
+}
+.side-ap-btn.finish:not(:disabled) {
+  background: var(--complete-day-btn-bg);
+  border-color: var(--complete-day-btn-border);
+  color: var(--complete-day-btn-color);
+}
+.side-ap-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Отдых идёт */
+.side-rest-active {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 14px; background: var(--glass); border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+.side-rest-active-label { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+.side-rest-active-timer {
+  font-family: 'Bebas Neue', sans-serif; font-size: 36px;
+  color: var(--accent2);
+}
+
+/* Карточки */
 .card {
   background: var(--glass);
   backdrop-filter: var(--blur);
@@ -497,7 +641,6 @@ body {
   border: none; background: transparent; color: var(--muted);
   font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
   cursor: pointer; transition: all 0.2s; text-align: center;
-  -webkit-tap-highlight-color: transparent;
 }
 .timer-mode-btn.active {
   background: var(--timer-mode-active-bg);
@@ -527,8 +670,6 @@ body {
   border: 1px solid var(--border); background: rgba(0,0,0,0.03);
   color: var(--text); font-family: 'DM Sans', sans-serif;
   font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.22s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .t-btn:hover { background: var(--glass-h); }
 .t-btn.primary {
@@ -537,7 +678,6 @@ body {
   color: var(--t-btn-primary-color);
   box-shadow: 0 3px 20px var(--glow);
 }
-.t-btn.primary:hover { box-shadow: 0 4px 28px var(--glow); }
 .t-row { display: flex; gap: 5px; }
 .t-row .t-btn { flex: 1; }
 .laps-box { width: 100%; max-height: 70px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
@@ -557,33 +697,26 @@ body {
   color: var(--muted); cursor: pointer; padding: 3px 10px; border-radius: var(--r-pill);
   font-size: 12px; transition: all 0.2s;
   margin-left: auto;
-  -webkit-tap-highlight-color: transparent;
 }
 .edit-day-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
 .exercise-list { display: flex; flex-direction: column; gap: 6px; }
-
-/* Карточка упражнения */
 .ex-card {
   background: rgba(0,0,0,0.02);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  padding: var(--ex-card-padding);
-  transition: background 0.2s, border-color 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.ex-card:hover { background: var(--glass-h); }
-.ex-card.completed { background: var(--done); border-color: var(--done-b); }
-
-.ex-main {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  gap: var(--ex-card-gap);
+  gap: 3px 10px;
   align-items: center;
 }
+.ex-card:hover { background: var(--glass-h); border-color: var(--accent); }
+.ex-card.completed { background: var(--done); border-color: var(--done-b); }
+.ex-card.active-ex { border-color: var(--accent2); box-shadow: 0 0 16px var(--glow); }
 .ex-name { font-size: 13px; font-weight: 500; grid-column: 1; grid-row: 1; }
 .ex-card.completed .ex-name { color: var(--muted); text-decoration: line-through; }
 .ex-target {
@@ -594,119 +727,29 @@ body {
   grid-column: 2; grid-row: 1;
   white-space: nowrap; align-self: start;
 }
-.ex-controls { grid-column: 1; grid-row: 2; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-.ex-weight { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 4px; }
-.set-dot {
-  width: 28px; height: 28px; border-radius: 8px;
+.ex-sets-mini { grid-column: 1; grid-row: 2; display: flex; gap: 3px; }
+.set-dot-mini {
+  width: 20px; height: 20px; border-radius: 6px;
   border: 1px solid var(--border);
   background: rgba(0,0,0,0.05);
-  color: var(--muted);
-  font-size: 11px; font-family: 'DM Sans', sans-serif;
-  cursor: default;
-  display: flex; align-items: center; justify-content: center;
   transition: all 0.18s;
 }
-.set-dot.done {
+.set-dot-mini.done {
   background: var(--set-dot-done-bg);
   border-color: var(--done-b);
-  color: #fff; font-weight: 600;
-  box-shadow: 0 2px 10px var(--glow);
+  box-shadow: 0 1px 6px var(--glow);
 }
+.ex-weight { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 4px; }
 .kg-label { font-size: 10px; color: var(--muted); }
 .kg-input {
-  width: 50px; height: 28px; border-radius: 8px;
+  width: 48px; height: 26px; border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--input-bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif; font-size: 11px;
   text-align: center; padding: 0 4px;
-  transition: border-color 0.18s;
 }
-.kg-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
-.kg-input::placeholder { color: var(--muted); }
-
-/* Панель подхода */
-.approach-panel {
-  padding: 10px 12px;
-  background: rgba(0,0,0,0.06);
-  border-radius: var(--r-md);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-top: 1px solid var(--border);
-}
-.approach-timer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.approach-timer-label { font-size: 11px; color: var(--muted); }
-.approach-timer-display {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 24px;
-  background: var(--timer-digits-grad);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.approach-controls {
-  display: flex;
-  gap: 6px;
-}
-.ap-btn {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-.ap-btn.start {
-  background: var(--t-btn-primary-bg);
-  border-color: var(--t-btn-primary-border);
-  color: var(--t-btn-primary-color);
-}
-.ap-btn.finish {
-  background: rgba(0,0,0,0.08);
-  color: var(--muted);
-}
-.ap-btn.finish:not(:disabled) {
-  background: var(--complete-day-btn-bg);
-  border-color: var(--complete-day-btn-border);
-  color: var(--complete-day-btn-color);
-}
-.ap-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.approach-rest {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.rest-label { font-size: 10px; color: var(--muted); text-transform: uppercase; }
-.rest-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.rest-input {
-  width: 60px;
-  padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--input-bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  text-align: center;
-}
-.rest-input:focus { outline: none; border-color: var(--accent); }
-.rest-timer-display {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
-  color: var(--accent2);
-}
+.kg-input:focus { outline: none; border-color: var(--accent); }
 
 .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
 .bottom-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -717,8 +760,6 @@ body {
   color: var(--complete-day-btn-color);
   font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
   cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .complete-day-btn:hover { filter: brightness(1.15); }
 .save-preset-btn {
@@ -728,8 +769,6 @@ body {
   color: var(--save-preset-btn-color);
   font-family: 'DM Sans', sans-serif; font-size: 12px;
   cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .save-preset-btn:hover { background: rgba(0,0,0,0.04); border-color: var(--accent); }
 .preset-select {
@@ -746,8 +785,6 @@ body {
   color: var(--reset-pill-color);
   font-family: 'DM Sans', sans-serif; font-size: 12px;
   cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .reset-pill:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
 
@@ -755,19 +792,18 @@ body {
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   z-index: 100; display: flex; align-items: center; justify-content: center;
   padding: 16px;
 }
 .modal {
   background: var(--bg); border: 1px solid var(--border-h);
   border-radius: var(--r-xl); padding: 24px; max-width: 550px; width: 100%;
-  max-height: 85vh; max-height: 85dvh; overflow-y: auto;
+  max-height: 85vh; overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.15);
 }
 .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--accent2); margin-bottom: 16px; }
 .modal-field { margin-bottom: 12px; }
-.modal-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; }
 .modal-field input, .modal-field select {
   width: 100%; padding: 10px 12px; border-radius: var(--r-md);
   border: 1px solid var(--border); background: var(--input-bg);
@@ -785,27 +821,21 @@ body {
   color: var(--text);
   font-family: 'DM Sans', sans-serif; font-size: 12px;
   cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
 }
 .btn:hover { background: var(--glass-h); }
 .btn.accent { background: var(--t-btn-primary-bg); border-color: var(--border-h); color: #fff; }
 .btn.green { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.35); color: #16a34a; }
 .btn.red { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: #ef4444; }
 
-/* Выбор темы */
 .theme-options { display: flex; gap: 8px; flex-wrap: wrap; }
 .theme-option {
   width: 44px; height: 44px; border-radius: 14px;
-  border: 2px solid var(--border);
-  cursor: pointer; transition: all 0.2s;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
+  border: 2px solid var(--border); cursor: pointer; transition: all 0.2s; position: relative;
 }
 .theme-option:hover { border-color: var(--accent); transform: scale(1.05); }
 .theme-option.active { border-color: var(--accent2); box-shadow: 0 0 14px var(--glow); }
 .theme-option.active::after {
-  content: '✓';
-  position: absolute; inset: 0;
+  content: '✓'; position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 18px; font-weight: 700;
   text-shadow: 0 0 8px rgba(0,0,0,0.6);
@@ -819,43 +849,14 @@ body {
 
 /* Адаптив */
 @media (max-width: 1024px) {
-  :root {
-    --bento-cols: 1fr 1fr;
-    --page-padding: 16px;
-    --gap: 10px;
-    --h1-size: 44px;
-    --h1-spacing: 3px;
-    --day-name-size: 22px;
-    --timer-ring-size: 110px;
-    --timer-digits-size: 30px;
-    --prog-gap: 14px;
-    --prog-padding: 16px 18px;
-  }
+  :root { --bento-cols: 1fr 1fr; --page-padding: 16px; --gap: 10px; --h1-size: 44px; --h1-spacing: 3px; --day-name-size: 22px; --timer-ring-size: 110px; --timer-digits-size: 30px; --prog-gap: 14px; --prog-padding: 16px 18px; --side-panel-width: 340px; }
   .card-timer { grid-column: 1 / -1; grid-row: auto; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; }
   .card-progress { grid-column: 1 / -1; }
   .card-exercises { grid-column: 1 / -1; }
 }
-
 @media (max-width: 768px) {
-  :root {
-    --bento-cols: 1fr;
-    --page-padding: 12px;
-    --gap: 8px;
-    --h1-size: 36px;
-    --h1-spacing: 2px;
-    --day-name-size: 20px;
-    --timer-ring-size: 100px;
-    --timer-digits-size: 28px;
-    --prog-gap: 12px;
-    --prog-padding: 14px 16px;
-    --timer-padding: 14px;
-    --ex-padding: 14px 16px 12px;
-    --streak-block-padding: 5px 5px 5px 12px;
-    --ex-card-padding: 8px 12px;
-    --ex-card-gap: 2px 8px;
-  }
+  :root { --bento-cols: 1fr; --page-padding: 12px; --gap: 8px; --h1-size: 36px; --h1-spacing: 2px; --day-name-size: 20px; --timer-ring-size: 100px; --timer-digits-size: 28px; --prog-gap: 12px; --prog-padding: 14px 16px; --timer-padding: 14px; --ex-padding: 14px 16px 12px; --streak-block-padding: 5px 5px 5px 12px; --side-panel-width: 300px; }
   .top-row { flex-direction: column; align-items: stretch; gap: 10px; }
-  .brand-block { justify-content: space-between; width: 100%; }
   .streak-days-block { width: 100%; justify-content: space-between; }
   .card-timer { flex-direction: column; align-items: center; }
   .bottom-row { flex-direction: column; align-items: stretch; }
@@ -863,77 +864,9 @@ body {
   .bottom-left > * { width: 100%; }
   .preset-select { max-width: 100%; }
   .reset-pill { width: 100%; text-align: center; }
-  .settings-btn { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 18px; }
 }
-
 @media (max-width: 480px) {
-  :root {
-    --page-padding: 10px;
-    --gap: 6px;
-    --h1-size: 30px;
-    --h1-spacing: 1px;
-    --day-name-size: 18px;
-    --timer-ring-size: 90px;
-    --timer-digits-size: 26px;
-    --prog-gap: 10px;
-    --prog-padding: 12px 14px;
-    --timer-padding: 12px 10px;
-    --ex-padding: 12px 14px 10px;
-    --streak-block-padding: 4px 4px 4px 10px;
-    --ex-card-padding: 8px 10px;
-    --ex-card-gap: 2px 6px;
-    --r-xl: 18px;
-    --r-lg: 14px;
-  }
-  .brand-badge { font-size: 10px; padding: 3px 8px; }
-  .day-pill { padding: 5px 10px; font-size: 11px; gap: 4px; }
-  .day-pill .del-day { font-size: 12px; }
-  .streak-mini .icon { font-size: 16px; }
-  .streak-mini .num { font-size: 18px; }
-  .card-progress { flex-direction: column; align-items: flex-start; }
-  .prog-ring-wrap { width: 56px; height: 56px; }
-  .prog-center { font-size: 15px; }
-  .prog-text h3 { font-size: 14px; }
-  .prog-text p { font-size: 11px; }
-  .prog-stats { gap: 10px; }
-  .prog-stat { font-size: 10px; }
-  .timer-mode-btn { font-size: 10px; padding: 5px 6px; }
-  .t-btn { font-size: 11px; padding: 8px; }
-  .ex-name { font-size: 12px; }
-  .ex-target { font-size: 9px; padding: 1px 6px; }
-  .set-dot { width: 26px; height: 26px; font-size: 10px; border-radius: 6px; }
-  .kg-input { width: 44px; height: 26px; font-size: 10px; }
-  .edit-day-btn { font-size: 11px; padding: 2px 8px; }
-  .complete-day-btn, .save-preset-btn, .reset-pill { font-size: 11px; padding: 7px 14px; }
-  .preset-select { font-size: 11px; padding: 6px 10px; }
-  .settings-btn { top: 8px; right: 8px; width: 32px; height: 32px; font-size: 16px; }
-  .modal { padding: 16px; }
-  .modal h3 { font-size: 20px; }
-  .modal-field input, .modal-field select { font-size: 13px; padding: 8px 10px; }
-  .btn { font-size: 11px; padding: 7px 14px; }
-  .theme-option { width: 38px; height: 38px; border-radius: 12px; }
-  .ap-btn { font-size: 11px; padding: 6px 10px; }
-  .approach-timer-display { font-size: 20px; }
-  .rest-timer-display { font-size: 18px; }
-}
-
-@media (max-width: 360px) {
-  :root {
-    --h1-size: 26px;
-    --timer-ring-size: 80px;
-    --timer-digits-size: 22px;
-    --day-name-size: 16px;
-    --prog-gap: 8px;
-    --prog-padding: 10px 12px;
-    --timer-padding: 10px 8px;
-    --ex-padding: 10px 12px 8px;
-  }
-  .day-pills { gap: 3px; }
-  .day-pill { padding: 4px 8px; font-size: 10px; }
-  .timer-controls { gap: 4px; }
-  .t-btn { padding: 7px; font-size: 10px; }
-  .ex-card { gap: 4px; }
-  .set-dot { width: 24px; height: 24px; font-size: 10px; }
+  :root { --page-padding: 10px; --gap: 6px; --h1-size: 30px; --h1-spacing: 1px; --day-name-size: 18px; --timer-ring-size: 90px; --timer-digits-size: 26px; --prog-gap: 10px; --prog-padding: 12px 14px; --timer-padding: 12px 10px; --ex-padding: 12px 14px 10px; --streak-block-padding: 4px 4px 4px 10px; --r-xl: 18px; --r-lg: 14px; --side-panel-width: 100vw; }
 }
 </style>
 </head>
@@ -959,6 +892,13 @@ body {
 
 <button class="settings-btn" onclick="openSettings()" title="Настройки">⚙</button>
 
+<!-- Оверлей + боковая панель -->
+<div class="side-panel-overlay" id="sideOverlay" onclick="closeSidePanel()"></div>
+<div class="side-panel" id="sidePanel">
+  <button class="side-panel-close" onclick="closeSidePanel()">✕</button>
+  <div id="sideContent"></div>
+</div>
+
 <div class="page">
   <div class="top-row">
     <div class="brand-block">
@@ -975,79 +915,80 @@ body {
     </div>
   </div>
 
-  <div class="bento">
-    <div class="card card-progress">
-      <div class="prog-ring-wrap">
-        <svg width="70" height="70" viewBox="0 0 70 70">
-          <circle class="prog-ring-bg" cx="35" cy="35" r="30"/>
-          <circle class="prog-ring-fill" id="prog-ring" cx="35" cy="35" r="30"
-            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
-        </svg>
-        <div class="prog-center" id="prog-pct">0%</div>
-      </div>
-      <div class="prog-bar-wrap">
-        <div class="prog-text" style="margin-bottom:8px">
-          <h3 id="prog-title">Начнём тренировку</h3>
-          <p id="prog-sub">Отмечай подходы ниже</p>
-        </div>
-        <div class="prog-bar-track">
-          <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
-        </div>
-        <div class="prog-stats" style="margin-top:6px">
-          <div class="prog-stat">Сделано: <span id="prog-done">0</span></div>
-          <div class="prog-stat">Осталось: <span id="prog-left">0</span></div>
-          <div class="prog-stat">Всего: <span id="prog-total">0</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Отдельная карточка таймера (скрыта по умолчанию) -->
-    <div class="card card-timer" id="timerCard" style="display:none;">
-      <div class="timer-mode">
-        <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
-        <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
-      </div>
-      <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
-        <div class="timer-ring-wrap">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle class="tr-bg" cx="65" cy="65" r="55"/>
-            <circle class="tr-fill" id="timer-ring" cx="65" cy="65" r="55"
-              stroke-dasharray="345.6" stroke-dashoffset="0"/>
+  <div class="page-layout">
+    <div class="bento">
+      <div class="card card-progress">
+        <div class="prog-ring-wrap">
+          <svg width="70" height="70" viewBox="0 0 70 70">
+            <circle class="prog-ring-bg" cx="35" cy="35" r="30"/>
+            <circle class="prog-ring-fill" id="prog-ring" cx="35" cy="35" r="30"
+              stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
           </svg>
-          <div class="timer-center">
-            <div class="timer-digits" id="timer-display">01:30</div>
-            <div class="timer-label">отдых</div>
-          </div>
+          <div class="prog-center" id="prog-pct">0%</div>
         </div>
-        <div class="timer-controls">
-          <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
-          <button class="t-btn" onclick="resetTimer()">Сброс</button>
+        <div class="prog-bar-wrap">
+          <div class="prog-text" style="margin-bottom:8px">
+            <h3 id="prog-title">Начнём тренировку</h3>
+            <p id="prog-sub">Нажми на упражнение</p>
+          </div>
+          <div class="prog-bar-track">
+            <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
+          </div>
+          <div class="prog-stats" style="margin-top:6px">
+            <div class="prog-stat">Сделано: <span id="prog-done">0</span></div>
+            <div class="prog-stat">Осталось: <span id="prog-left">0</span></div>
+            <div class="prog-stat">Всего: <span id="prog-total">0</span></div>
+          </div>
         </div>
       </div>
-      <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
-        <div class="timer-ring-wrap">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle class="tr-bg" cx="65" cy="65" r="55"/>
-            <circle class="tr-fill" id="sw-ring" cx="65" cy="65" r="55"
-              stroke-dasharray="345.6" stroke-dashoffset="345.6"/>
-          </svg>
-          <div class="timer-center">
-            <div class="timer-digits" id="sw-display" style="font-size:28px">00:00</div>
-            <div class="timer-label">секундомер</div>
-          </div>
-        </div>
-        <div class="timer-controls">
-          <button class="t-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
-          <div class="t-row">
-            <button class="t-btn" onclick="lapSW()">Круг</button>
-            <button class="t-btn" onclick="resetSW()">Сброс</button>
-          </div>
-        </div>
-        <div class="laps-box" id="laps-list"></div>
-      </div>
-    </div>
 
-    <div class="card card-exercises" id="exercisesContainer"></div>
+      <div class="card card-timer" id="timerCard">
+        <div class="timer-mode">
+          <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
+          <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
+        </div>
+        <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div class="timer-ring-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130">
+              <circle class="tr-bg" cx="65" cy="65" r="55"/>
+              <circle class="tr-fill" id="timer-ring" cx="65" cy="65" r="55"
+                stroke-dasharray="345.6" stroke-dashoffset="0"/>
+            </svg>
+            <div class="timer-center">
+              <div class="timer-digits" id="timer-display">01:30</div>
+              <div class="timer-label">отдых</div>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
+            <button class="t-btn" onclick="resetTimer()">Сброс</button>
+          </div>
+        </div>
+        <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div class="timer-ring-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130">
+              <circle class="tr-bg" cx="65" cy="65" r="55"/>
+              <circle class="tr-fill" id="sw-ring" cx="65" cy="65" r="55"
+                stroke-dasharray="345.6" stroke-dashoffset="345.6"/>
+            </svg>
+            <div class="timer-center">
+              <div class="timer-digits" id="sw-display" style="font-size:28px">00:00</div>
+              <div class="timer-label">секундомер</div>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <button class="t-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
+            <div class="t-row">
+              <button class="t-btn" onclick="lapSW()">Круг</button>
+              <button class="t-btn" onclick="resetSW()">Сброс</button>
+            </div>
+          </div>
+          <div class="laps-box" id="laps-list"></div>
+        </div>
+      </div>
+
+      <div class="card card-exercises" id="exercisesContainer"></div>
+    </div>
   </div>
 
   <div class="bottom-row">
@@ -1069,7 +1010,6 @@ body {
 const THEME_KEY = 'selectedTheme';
 const THEMES = ['blackout', 'fire', 'aqua', 'forest', 'violet', 'liquid'];
 const DEFAULT_THEME = 'blackout';
-
 function getTheme() { return localStorage.getItem(THEME_KEY) || DEFAULT_THEME; }
 function applyTheme(theme) {
   document.body.classList.remove(...THEMES.map(t => `theme-${t}`));
@@ -1089,12 +1029,6 @@ function openSettings() {
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal" style="max-width:420px">
         <h3>⚙ Настройки</h3>
-        <div class="modal-field">
-          <label>Таймер</label>
-          <button class="btn" onclick="toggleTimerCardVisibility();closeModal();">
-            ${showTimerCard ? 'Убрать в панель подходов' : 'Показать отдельным окном'}
-          </button>
-        </div>
         <div class="modal-field">
           <label>Тема</label>
           <div class="theme-options">
@@ -1182,30 +1116,187 @@ function savePlan(plan) { localStorage.setItem(STORAGE_PLAN, JSON.stringify(plan
 let PLAN = loadPlan();
 let currentDay = 0;
 
-// ── Подходы и отдых ──
-let activeApproach = null;
-let restInterval = null;
-let restSecondsLeft = 0;
-let showTimerCard = false;
-
-function getRestTime() { return localStorage.getItem('restTime') || 90; }
-function saveRestTime(sec) { localStorage.setItem('restTime', sec); }
-
-function toggleTimerCardVisibility() {
-  showTimerCard = !showTimerCard;
-  document.getElementById('timerCard').style.display = showTimerCard ? 'flex' : 'none';
-  localStorage.setItem('showTimerCard', showTimerCard);
-}
-
 const sk = (d,e) => `wt2_d${d}_e${e}`;
 const wk = (d,e) => `wt2_d${d}_e${e}_w`;
 const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
 const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
 
-function getStreak() {
-  try { const r = localStorage.getItem(STORAGE_STREAK); return r ? JSON.parse(r) : { streak: 0, lastDate: null }; }
-  catch { return { streak: 0, lastDate: null }; }
+// ── SIDE PANEL ──
+let activeSideEx = null; // { di, ei }
+let approachTimer = null;
+let restTimerInterval = null;
+let restRemaining = 0;
+
+function openSidePanel(di, ei) {
+  activeSideEx = { di, ei };
+  document.getElementById('sideOverlay').classList.add('open');
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('timerCard').style.display = 'none';
+  renderSidePanel();
+  // Подсветка в списке
+  document.querySelectorAll('.ex-card').forEach(c => c.classList.remove('active-ex'));
+  const card = document.getElementById(`ex-${di}-${ei}`);
+  if (card) card.classList.add('active-ex');
 }
+
+function closeSidePanel() {
+  document.getElementById('sideOverlay').classList.remove('open');
+  document.getElementById('sidePanel').classList.remove('open');
+  activeSideEx = null;
+  if (approachTimer) { clearInterval(approachTimer); approachTimer = null; }
+  if (restTimerInterval) { clearInterval(restTimerInterval); restTimerInterval = null; }
+  document.getElementById('timerCard').style.display = 'flex';
+  document.querySelectorAll('.ex-card').forEach(c => c.classList.remove('active-ex'));
+  renderExercises();
+}
+
+function renderSidePanel() {
+  if (!activeSideEx) return;
+  const { di, ei } = activeSideEx;
+  const ex = PLAN[di].exercises[ei];
+  const state = loadSt(di, ei, ex.sets);
+  const doneCount = state.filter(Boolean).length;
+  const allDone = state.every(Boolean);
+  
+  let setsHTML = '';
+  for (let s = 0; s < ex.sets; s++) {
+    setsHTML += `<div class="side-set-dot${state[s]?' done':''}">${s+1}</div>`;
+  }
+  
+  const restTime = getRestTime();
+  
+  document.getElementById('sideContent').innerHTML = `
+    <div class="side-ex-name">${ex.name}</div>
+    <div class="side-ex-target">${ex.target} · ${doneCount}/${ex.sets} подходов</div>
+    
+    <div class="side-sets-row">
+      ${setsHTML}
+      ${doneCount > 0 ? `<button class="side-set-delete" onclick="deleteLastSet(${di},${ei})">↩ Отменить последний</button>` : ''}
+    </div>
+    
+    ${!allDone ? `
+    <div class="side-rest-setup">
+      <label>Отдых перед подходом (сек)</label>
+      <div class="rest-row">
+        <input type="number" class="side-rest-input" id="sideRestInput" value="${restTime}" min="5" max="600" step="5" onchange="saveRestTime(this.value)">
+      </div>
+    </div>
+    ` : '<div style="text-align:center;color:var(--accent2);font-weight:600;padding:12px;">✅ Все подходы выполнены!</div>'}
+    
+    <div class="side-timer-ring-wrap">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle class="side-tr-bg" cx="70" cy="70" r="60"/>
+        <circle class="side-tr-fill" id="sideTimerRing" cx="70" cy="70" r="60"
+          stroke-dasharray="377" stroke-dashoffset="377"/>
+      </svg>
+      <div class="side-timer-center">
+        <div class="side-timer-digits" id="sideTimerDisplay">00:00</div>
+        <div class="side-timer-label" id="sideTimerLabel">подход</div>
+      </div>
+    </div>
+    
+    <div class="side-approach-btns">
+      <button class="side-ap-btn start" id="sideStartBtn" onclick="startSideApproach()" ${allDone?'disabled':''}>▶ Начать подход</button>
+      <button class="side-ap-btn finish" id="sideFinishBtn" onclick="finishSideApproach()" disabled>✓ Завершить</button>
+    </div>
+    
+    <div id="sideRestPanel"></div>
+  `;
+  
+  updateSideTimerRing(0);
+}
+
+function startSideApproach() {
+  if (!activeSideEx) return;
+  document.getElementById('sideFinishBtn').disabled = false;
+  document.getElementById('sideStartBtn').disabled = true;
+  document.getElementById('sideRestPanel').innerHTML = '';
+  if (restTimerInterval) { clearInterval(restTimerInterval); restTimerInterval = null; }
+  
+  const startTime = Date.now();
+  document.getElementById('sideTimerLabel').textContent = 'подход';
+  if (approachTimer) clearInterval(approachTimer);
+  approachTimer = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('sideTimerDisplay').textContent = fmt(elapsed);
+    updateSideTimerRing(elapsed % 60);
+  }, 200);
+}
+
+function finishSideApproach() {
+  if (!activeSideEx || !approachTimer) return;
+  clearInterval(approachTimer); approachTimer = null;
+  
+  const { di, ei } = activeSideEx;
+  const state = loadSt(di, ei, PLAN[di].exercises[ei].sets);
+  const nextIdx = state.findIndex(s => !s);
+  if (nextIdx !== -1) {
+    state[nextIdx] = true;
+    saveSt(di, ei, state);
+  }
+  
+  renderSidePanel();
+  updateProgress(currentDay);
+  
+  const updatedState = loadSt(di, ei, PLAN[di].exercises[ei].sets);
+  if (!updatedState.every(Boolean)) {
+    startSideRest();
+  }
+}
+
+function startSideRest() {
+  const restPanel = document.getElementById('sideRestPanel');
+  const restTime = parseInt(document.getElementById('sideRestInput')?.value) || getRestTime();
+  restRemaining = restTime;
+  
+  restPanel.innerHTML = `
+    <div class="side-rest-active">
+      <span class="side-rest-active-label">Отдых</span>
+      <span class="side-rest-active-timer" id="sideRestTimer">${fmt(restRemaining)}</span>
+    </div>`;
+  
+  document.getElementById('sideTimerLabel').textContent = 'отдых';
+  document.getElementById('sideTimerDisplay').textContent = fmt(restRemaining);
+  updateSideTimerRing(restRemaining / restTime * 60);
+  
+  if (restTimerInterval) clearInterval(restTimerInterval);
+  restTimerInterval = setInterval(() => {
+    restRemaining--;
+    const display = document.getElementById('sideRestTimer');
+    if (display) display.textContent = fmt(restRemaining);
+    document.getElementById('sideTimerDisplay').textContent = fmt(restRemaining);
+    updateSideTimerRing(restRemaining / restTime * 60);
+    
+    if (restRemaining <= 0) {
+      clearInterval(restTimerInterval); restTimerInterval = null;
+      document.getElementById('sideRestPanel').innerHTML = '<div style="text-align:center;color:var(--accent2);padding:8px;">✓ Можно начинать!</div>';
+      playSound();
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      document.getElementById('sideStartBtn').disabled = false;
+    }
+  }, 1000);
+}
+
+function deleteLastSet(di, ei) {
+  const state = loadSt(di, ei, PLAN[di].exercises[ei].sets);
+  const lastDoneIdx = state.map((v,i) => v ? i : -1).filter(i => i !== -1).pop();
+  if (lastDoneIdx !== undefined) {
+    state[lastDoneIdx] = false;
+    saveSt(di, ei, state);
+  }
+  renderSidePanel();
+  updateProgress(currentDay);
+}
+
+function updateSideTimerRing(secondsFraction) {
+  const ring = document.getElementById('sideTimerRing');
+  if (!ring) return;
+  const circ = 377;
+  ring.style.strokeDashoffset = circ - (circ * Math.min(secondsFraction, 60) / 60);
+}
+
+// ── STREAK ──
+function getStreak() { try { const r = localStorage.getItem(STORAGE_STREAK); return r ? JSON.parse(r) : { streak: 0, lastDate: null }; } catch { return { streak: 0, lastDate: null }; } }
 function saveStreak(d) { localStorage.setItem(STORAGE_STREAK, JSON.stringify(d)); }
 function updateStreakUI() { document.getElementById('streakNum').textContent = getStreak().streak; }
 function completeDay() {
@@ -1220,11 +1311,15 @@ function completeDay() {
   alert(`День засчитан! Стрик: ${s.streak} дн. 🔥`);
 }
 
+function getRestTime() { return localStorage.getItem('restTime') || 90; }
+function saveRestTime(sec) { localStorage.setItem('restTime', sec); }
+
+// ── DAYS ──
 function addDay() {
   if (PLAN.length >= 7) { alert('Максимум 7 дней!'); return; }
-  const name = prompt('Название дня (например, "ПЛЕЧИ"):');
+  const name = prompt('Название дня:');
   if (!name || !name.trim()) return;
-  const short = prompt('Короткое имя для кнопки (например, "Плечи"):');
+  const short = prompt('Короткое имя:');
   if (!short || !short.trim()) return;
   PLAN.push({ name: name.trim().toUpperCase(), short: short.trim(), exercises: [{ name: "Новое упражнение", sets: 3, target: "10" }] });
   savePlan(PLAN);
@@ -1233,35 +1328,25 @@ function addDay() {
 }
 
 function deleteDay(di) {
-  if (PLAN.length <= 1) { alert('Должен быть хотя бы 1 день!'); return; }
-  if (!confirm(`Удалить день «${PLAN[di].name}»? Прогресс дня сбросится.`)) return;
+  if (PLAN.length <= 1) { alert('Минимум 1 день!'); return; }
+  if (!confirm(`Удалить «${PLAN[di].name}»?`)) return;
   PLAN.splice(di, 1);
   savePlan(PLAN);
   if (currentDay >= PLAN.length) currentDay = PLAN.length - 1;
-  for (let i = 0; i < 20; i++) { localStorage.removeItem(sk(di, i)); localStorage.removeItem(wk(di, i)); }
-  for (let d = di; d < PLAN.length; d++) {
-    for (let e = 0; e < 20; e++) {
-      const oldS = localStorage.getItem(sk(d+1, e));
-      const oldW = localStorage.getItem(wk(d+1, e));
-      if (oldS !== null) { localStorage.setItem(sk(d, e), oldS); localStorage.removeItem(sk(d+1, e)); }
-      if (oldW !== null) { localStorage.setItem(wk(d, e), oldW); localStorage.removeItem(wk(d+1, e)); }
-    }
-  }
   renderAll();
 }
 
 function renderDayPills() {
   const container = document.getElementById('dayPillsContainer');
-  const addBtn = document.getElementById('addDayBtn');
   container.innerHTML = '';
   PLAN.forEach((day, i) => {
     const pill = document.createElement('button');
     pill.className = 'day-pill' + (i === currentDay ? ' active' : '');
-    pill.innerHTML = `${day.short} <span class="del-day" onclick="event.stopPropagation();deleteDay(${i})" title="Удалить день">×</span>`;
+    pill.innerHTML = `${day.short} <span class="del-day" onclick="event.stopPropagation();deleteDay(${i})">×</span>`;
     pill.onclick = () => switchDay(i);
     container.appendChild(pill);
   });
-  addBtn.style.display = PLAN.length >= 7 ? 'none' : 'flex';
+  document.getElementById('addDayBtn').style.display = PLAN.length >= 7 ? 'none' : 'flex';
 }
 
 function renderExercises() {
@@ -1277,36 +1362,20 @@ function renderExercises() {
       const state = loadSt(di, ei, ex.sets);
       const weight = localStorage.getItem(wk(di,ei)) || '';
       let dots = '';
-      for (let s = 0; s < ex.sets; s++)
-        dots += `<div class="set-dot${state[s]?' done':''}">${s+1}</div>`;
+      for (let s = 0; s < ex.sets; s++) {
+        dots += `<div class="set-dot-mini${state[s]?' done':''}"></div>`;
+      }
+      const isActive = activeSideEx && activeSideEx.di === di && activeSideEx.ei === ei;
       exHTML += `
-        <div class="ex-card${state.every(Boolean)?' completed':''}" id="ex-${di}-${ei}">
-          <div class="ex-main">
-            <span class="ex-name">${ex.name}</span>
-            <span class="ex-target">${ex.target}</span>
-            <div class="ex-controls">${dots}</div>
-            <div class="ex-weight">
-              <span class="kg-label">кг</span>
-              <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
-                oninput="localStorage.setItem('${wk(di,ei)}',this.value)" id="weight-${di}-${ei}">
-            </div>
-          </div>
-          <div class="approach-panel" id="approach-${di}-${ei}">
-            <div class="approach-timer">
-              <span class="approach-timer-label">⏱ Подход</span>
-              <span class="approach-timer-display" id="ap-display-${di}-${ei}">00:00</span>
-            </div>
-            <div class="approach-controls">
-              <button class="ap-btn start" onclick="startApproach(${di},${ei})">▶ Начать подход</button>
-              <button class="ap-btn finish" onclick="finishApproach(${di},${ei})" disabled>✓ Завершить</button>
-            </div>
-            <div class="approach-rest" id="rest-panel-${di}-${ei}" style="display:none;">
-              <span class="rest-label">Отдых (сек)</span>
-              <div class="rest-row">
-                <input type="number" class="rest-input" value="${getRestTime()}" min="10" max="600" step="5" id="rest-input-${di}-${ei}" onchange="saveRestTime(this.value)">
-                <span class="rest-timer-display" id="rest-display-${di}-${ei}">--:--</span>
-              </div>
-            </div>
+        <div class="ex-card${state.every(Boolean)?' completed':''}${isActive?' active-ex':''}" id="ex-${di}-${ei}" onclick="openSidePanel(${di},${ei})">
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-target">${ex.target}</span>
+          <div class="ex-sets-mini">${dots}</div>
+          <div class="ex-weight">
+            <span class="kg-label">кг</span>
+            <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
+              onclick="event.stopPropagation()"
+              oninput="localStorage.setItem('${wk(di,ei)}',this.value)">
           </div>
         </div>`;
     });
@@ -1314,7 +1383,7 @@ function renderExercises() {
       <div class="day-header">
         <span class="day-name">${day.name}</span>
         <span class="day-count">${day.exercises.length} упр.</span>
-        <button class="edit-day-btn" onclick="openDayEditor(${di})">✎ Ред.</button>
+        <button class="edit-day-btn" onclick="event.stopPropagation();openDayEditor(${di})">✎ Ред.</button>
       </div>
       <div class="exercise-list">${exHTML}</div>`;
     container.appendChild(dayDiv);
@@ -1324,18 +1393,9 @@ function renderExercises() {
 
 function switchDay(day) {
   currentDay = day;
+  closeSidePanel();
   document.querySelectorAll('.day').forEach((d,i) => d.style.display = i===day?'block':'none');
   renderDayPills();
-  updateProgress(day);
-}
-
-function toggleSet(day, ei, s) {
-  const state = loadSt(day, ei, PLAN[day].exercises[ei].sets);
-  state[s] = !state[s]; saveSt(day, ei, state);
-  // Обновляем только квадратики
-  const el = document.getElementById(`ex-${day}-${ei}`);
-  el.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
-  el.querySelectorAll('.set-dot').forEach((b,i) => b.className = 'set-dot'+(state[i]?' done':''));
   updateProgress(day);
 }
 
@@ -1359,89 +1419,8 @@ function updateProgress(day) {
 function resetDay() {
   if (!confirm('Сбросить прогресс этого дня?')) return;
   PLAN[currentDay].exercises.forEach((_,ei) => localStorage.removeItem(sk(currentDay,ei)));
+  closeSidePanel();
   renderExercises();
-}
-
-// ── APPROACH LOGIC ──
-function startApproach(di, ei) {
-  const panel = document.getElementById(`approach-${di}-${ei}`);
-  const display = document.getElementById(`ap-display-${di}-${ei}`);
-  const finishBtn = panel.querySelector('.ap-btn.finish');
-  const restPanel = document.getElementById(`rest-panel-${di}-${ei}`);
-  
-  if (restInterval) clearInterval(restInterval);
-  if (restPanel) restPanel.style.display = 'none';
-  
-  const startTime = Date.now();
-  activeApproach = { di, ei, startTime, interval: setInterval(() => {
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    display.textContent = fmt(elapsed);
-  }, 200) };
-  
-  finishBtn.disabled = false;
-  panel.querySelector('.ap-btn.start').disabled = true;
-}
-
-function finishApproach(di, ei) {
-  if (!activeApproach || activeApproach.di !== di || activeApproach.ei !== ei) return;
-  
-  clearInterval(activeApproach.interval);
-  activeApproach = null;
-  
-  const panel = document.getElementById(`approach-${di}-${ei}`);
-  panel.querySelector('.ap-btn.start').disabled = false;
-  panel.querySelector('.ap-btn.finish').disabled = true;
-  
-  // Отмечаем следующий незаполненный квадратик
-  const state = loadSt(di, ei, PLAN[di].exercises[ei].sets);
-  const nextIdx = state.findIndex(s => !s);
-  if (nextIdx !== -1) {
-    toggleSet(di, ei, nextIdx);
-  }
-  
-  const updatedState = loadSt(di, ei, PLAN[di].exercises[ei].sets);
-  if (!updatedState.every(Boolean) && !showTimerCard) {
-    startRestTimer(di, ei);
-  } else if (showTimerCard && !updatedState.every(Boolean)) {
-    setTimer(parseInt(getRestTime()));
-  }
-}
-
-function startRestTimer(di, ei) {
-  const restPanel = document.getElementById(`rest-panel-${di}-${ei}`);
-  const restDisplay = document.getElementById(`rest-display-${di}-${ei}`);
-  const restInput = document.getElementById(`rest-input-${di}-${ei}`);
-  
-  restPanel.style.display = 'flex';
-  restSecondsLeft = parseInt(restInput.value) || 90;
-  restDisplay.textContent = fmt(restSecondsLeft);
-  
-  if (restInterval) clearInterval(restInterval);
-  restInterval = setInterval(() => {
-    restSecondsLeft--;
-    restDisplay.textContent = fmt(restSecondsLeft);
-    if (restSecondsLeft <= 0) {
-      clearInterval(restInterval);
-      restDisplay.textContent = '✓ ГОТОВО';
-      playSound();
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    }
-  }, 1000);
-}
-
-function playSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    gain.gain.value = 0.3;
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-    osc.stop(ctx.currentTime + 0.5);
-  } catch(e) {}
 }
 
 // ── DAY EDITOR ──
@@ -1458,19 +1437,9 @@ function openDayEditor(di) {
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal">
         <h3>Ред. день</h3>
-        <div class="modal-field">
-          <label>Название</label>
-          <input type="text" id="editDayName" value="${day.name}">
-        </div>
-        <div class="modal-field">
-          <label>Короткое имя</label>
-          <input type="text" id="editDayShort" value="${day.short}">
-        </div>
-        <div class="modal-field">
-          <label>Упражнения</label>
-          <div id="exRowsContainer">${exRows}</div>
-          <button class="btn green" onclick="addExRow()" style="margin-top:6px">+ Упражнение</button>
-        </div>
+        <div class="modal-field"><label>Название</label><input type="text" id="editDayName" value="${day.name}"></div>
+        <div class="modal-field"><label>Короткое имя</label><input type="text" id="editDayShort" value="${day.short}"></div>
+        <div class="modal-field"><label>Упражнения</label><div id="exRowsContainer">${exRows}</div><button class="btn green" onclick="addExRow()" style="margin-top:6px">+ Упражнение</button></div>
         <div class="modal-actions">
           <button class="btn" onclick="closeModal()">Отмена</button>
           <button class="btn accent" onclick="saveDayEdit(${di})">Сохранить</button>
@@ -1478,19 +1447,13 @@ function openDayEditor(di) {
       </div>
     </div>`;
 }
-
 function addExRow() {
   const container = document.getElementById('exRowsContainer');
   const row = document.createElement('div');
   row.className = 'exercise-edit-row';
-  row.innerHTML = `
-    <input type="text" value="" placeholder="Название" class="ex-name-inp">
-    <input type="number" value="3" placeholder="Подх." class="small ex-sets-inp" min="1" max="20">
-    <input type="text" value="" placeholder="Цель" class="ex-target-inp">
-    <button class="btn red" onclick="this.parentElement.remove()">✕</button>`;
+  row.innerHTML = `<input type="text" value="" placeholder="Название" class="ex-name-inp"><input type="number" value="3" placeholder="Подх." class="small ex-sets-inp" min="1" max="20"><input type="text" value="" placeholder="Цель" class="ex-target-inp"><button class="btn red" onclick="this.parentElement.remove()">✕</button>`;
   container.appendChild(row);
 }
-
 function saveDayEdit(di) {
   const name = document.getElementById('editDayName').value.trim();
   const short = document.getElementById('editDayShort').value.trim();
@@ -1503,16 +1466,14 @@ function saveDayEdit(di) {
     const t = row.querySelector('.ex-target-inp').value.trim();
     if (n) exercises.push({ name: n, sets: s, target: t || 'повт.' });
   });
-  if (exercises.length === 0) { alert('Нужно минимум 1 упражнение!'); return; }
+  if (exercises.length === 0) { alert('Минимум 1 упражнение!'); return; }
   PLAN[di].name = name;
   PLAN[di].short = short;
   PLAN[di].exercises = exercises;
   savePlan(PLAN);
-  for (let i = 0; i < 20; i++) { localStorage.removeItem(sk(di, i)); localStorage.removeItem(wk(di, i)); }
   closeModal();
   renderAll();
 }
-
 function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
 
 // ── PRESETS ──
@@ -1529,12 +1490,13 @@ function savePreset() {
 }
 function loadPreset(name) {
   if (!name) return;
-  if (!confirm(`Загрузить «${name}»? Текущий план заменится.`)) { document.getElementById('presetSelect').value = ''; return; }
+  if (!confirm(`Загрузить «${name}»?`)) { document.getElementById('presetSelect').value = ''; return; }
   const presets = getPresets();
   if (presets[name]) {
     PLAN = JSON.parse(JSON.stringify(presets[name]));
     savePlan(PLAN);
     currentDay = 0;
+    closeSidePanel();
     renderAll();
     document.getElementById('presetSelect').value = '';
   }
@@ -1553,14 +1515,28 @@ function renderAll() {
   updateStreakUI();
 }
 
+// ── SOUND (громче на 30%) ──
+function playSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.value = 0.39; // +30%
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    osc.stop(ctx.currentTime + 0.5);
+  } catch(e) {}
+}
+
 // ── INIT ──
-showTimerCard = localStorage.getItem('showTimerCard') === 'true';
-document.getElementById('timerCard').style.display = showTimerCard ? 'flex' : 'none';
 applyTheme(getTheme());
 renderAll();
 updateProgress(currentDay);
 
-// ── TIMER ──
+// ── GLOBAL TIMER (правая карточка) ──
 function switchClock(m) {
   document.querySelectorAll('#timerCard .timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='timer')||(i===1&&m==='sw')));
   document.getElementById('panel-timer').style.display = m==='timer'?'flex':'none';
