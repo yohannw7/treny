@@ -5,245 +5,482 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Тренировки</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
-    --border: #2a2a2a; --accent: #c8f135; --text: #f0f0f0; --muted: #6b6b6b;
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .layout { display: grid; grid-template-columns: 240px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+:root {
+  --bg: #100720;
+  --glass: rgba(255,255,255,0.06);
+  --glass-h: rgba(255,255,255,0.10);
+  --border: rgba(255,255,255,0.11);
+  --border-h: rgba(185,127,255,0.45);
+  --accent: #b97fff;
+  --accent2: #dbb8ff;
+  --glow: rgba(185,127,255,0.3);
+  --text: #f0eaff;
+  --muted: rgba(220,200,255,0.42);
+  --done: rgba(185,127,255,0.22);
+  --done-b: rgba(185,127,255,0.5);
+  --r-xl: 28px;
+  --r-lg: 20px;
+  --r-md: 14px;
+  --r-pill: 999px;
+  --blur: blur(20px);
+}
 
-  .site-header {
-    grid-column: 1 / -1;
-    padding: 22px 24px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-end; gap: 16px;
-  }
-  .site-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 44px; letter-spacing: 2px; color: var(--accent); line-height: 1; }
-  .site-header p { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  .sidebar {
-    border-right: 1px solid var(--border);
-    padding: 18px 14px;
-    display: flex; flex-direction: column; gap: 14px;
-    position: sticky; top: 0;
-    height: calc(100vh - 69px);
-    overflow-y: auto; scrollbar-width: none;
-  }
-  .sidebar::-webkit-scrollbar { display: none; }
+/* Blobs */
+.blob { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+.blob-1 { width: 700px; height: 500px; top: -200px; left: -200px; background: radial-gradient(ellipse, rgba(120,60,200,0.28) 0%, transparent 70%); }
+.blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: radial-gradient(ellipse, rgba(160,80,240,0.22) 0%, transparent 70%); }
+.blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: radial-gradient(ellipse, rgba(185,127,255,0.1) 0%, transparent 65%); }
 
-  .clock-tabs { display: flex; gap: 4px; }
-  .clock-tab {
-    flex: 1; padding: 6px 8px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--surface);
-    color: var(--muted); font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center;
-  }
-  .clock-tab.active { background: var(--surface2); border-color: #444; color: var(--text); }
+/* Page */
+.page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 
-  .clock-panel { display: none; }
-  .clock-panel.active { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+/* Header */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+}
+.header-left h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px; letter-spacing: 4px; line-height: 1;
+  background: linear-gradient(120deg, #fff 0%, var(--accent2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-left p { font-size: 12px; color: var(--muted); margin-top: 3px; letter-spacing: 0.4px; }
 
-  .clock-display {
-    font-family: 'Bebas Neue', sans-serif; font-size: 62px;
-    letter-spacing: 3px; color: var(--accent); line-height: 1;
-    transition: color 0.3s; text-align: center;
-  }
-  .clock-display.warning { color: #ff6b35; }
-  .clock-display.done { color: #ff3535; }
+/* Day pills */
+.day-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.day-pill {
+  padding: 9px 18px; border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.22s; white-space: nowrap;
+}
+.day-pill:hover { background: var(--glass-h); color: var(--text); border-color: rgba(255,255,255,0.2); }
+.day-pill.active {
+  background: linear-gradient(135deg, rgba(185,127,255,0.32), rgba(130,70,220,0.32));
+  border-color: var(--border-h);
+  color: #fff;
+  box-shadow: 0 2px 18px var(--glow);
+}
 
-  .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 100%; }
-  .preset-btn {
-    padding: 7px 4px; border-radius: 6px; border: 1px solid var(--border);
-    background: var(--surface2); color: var(--muted);
-    font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer;
-    transition: all 0.15s; text-align: center;
-  }
-  .preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+/* Bento grid */
+.bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr 300px;
+  grid-template-rows: auto auto;
+  gap: 14px;
+}
 
-  .clock-controls { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-  .ctrl-btn {
-    width: 100%; padding: 9px; border-radius: 7px;
-    border: 1px solid var(--border); background: var(--surface2); color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: all 0.15s; text-align: center;
-  }
-  .ctrl-btn.primary { background: var(--accent); border-color: var(--accent); color: #0d0d0d; }
-  .ctrl-btn:hover { opacity: 0.85; }
-  .ctrl-row { display: flex; gap: 6px; width: 100%; }
-  .ctrl-row .ctrl-btn { flex: 1; }
+/* Glass card base */
+.card {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover { border-color: rgba(255,255,255,0.16); }
 
-  .laps-list { width: 100%; max-height: 110px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .lap-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 4px 0; border-bottom: 0.5px solid var(--border); }
-  .lap-row:last-child { border-bottom: none; }
+/* Progress card — top left, spans 2 cols */
+.card-progress {
+  grid-column: 1 / 3;
+  padding: 22px 26px;
+  display: flex; align-items: center; gap: 24px;
+}
+.prog-ring-wrap { flex-shrink: 0; position: relative; width: 80px; height: 80px; }
+.prog-ring-wrap svg { transform: rotate(-90deg); }
+.prog-ring-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 6; }
+.prog-ring-fill { fill: none; stroke: url(#ringGrad); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+.prog-center {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px;
+  background: linear-gradient(135deg, #fff, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.prog-text h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.prog-text p { font-size: 13px; color: var(--muted); }
+.prog-bar-wrap { flex: 1; }
+.prog-bar-track {
+  height: 6px; background: rgba(255,255,255,0.07);
+  border-radius: var(--r-pill); overflow: hidden; margin-bottom: 8px;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8040d0, var(--accent2));
+  border-radius: var(--r-pill);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px var(--glow);
+}
+.prog-stats { display: flex; gap: 20px; }
+.prog-stat { font-size: 12px; color: var(--muted); }
+.prog-stat span { color: var(--text); font-weight: 500; }
 
-  .sidebar-divider { height: 1px; background: var(--border); }
+/* Timer card — top right, spans 2 rows */
+.card-timer {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  padding: 24px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
 
-  .tips-box { border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 7px 7px 0; padding: 10px 11px; }
-  .tips-box p { font-size: 11px; color: var(--muted); line-height: 1.9; }
-  .tips-box strong { color: var(--text); font-weight: 500; }
+/* Timer mode toggle */
+.timer-mode { display: flex; background: rgba(0,0,0,0.2); border-radius: var(--r-pill); padding: 3px; gap: 0; width: 100%; }
+.timer-mode-btn {
+  flex: 1; padding: 7px 10px; border-radius: var(--r-pill);
+  border: none; background: transparent; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.timer-mode-btn.active {
+  background: rgba(185,127,255,0.25);
+  color: var(--accent2);
+  box-shadow: 0 1px 8px var(--glow);
+}
 
-  .main { padding: 18px 22px 60px; }
+/* Circular timer */
+.timer-ring-wrap { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
+.timer-ring-wrap svg { transform: rotate(-90deg); }
+.tr-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
+.tr-fill { fill: none; stroke: url(#timerGrad); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.9s linear; }
+.timer-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.timer-digits {
+  font-family: 'Bebas Neue', sans-serif; font-size: 44px; letter-spacing: 3px; line-height: 1;
+  background: linear-gradient(135deg, #fff, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  transition: filter 0.3s;
+}
+.timer-digits.warning { background: linear-gradient(135deg,#ffa07a,#ff6b35); -webkit-background-clip:text; background-clip:text; filter: drop-shadow(0 0 8px rgba(255,107,53,0.6)); }
+.timer-digits.done { background: linear-gradient(135deg,#ff9090,#ff4444); -webkit-background-clip:text; background-clip:text; }
+.timer-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
-  .progress-wrap { margin-bottom: 14px; }
-  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
-  .progress-track { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+.preset-pill {
+  padding: 8px 6px; border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 12px;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.preset-pill:hover { border-color: var(--accent); color: var(--accent2); background: rgba(185,127,255,0.1); }
 
-  .tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; flex-wrap: wrap; }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    flex-shrink: 0; padding: 6px 13px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
-    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-    cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  }
-  .tab:hover { border-color: #444; color: var(--text); }
-  .tab.active { background: var(--accent); border-color: var(--accent); color: #0d0d0d; }
+.timer-controls { display: flex; flex-direction: column; gap: 7px; width: 100%; }
+.t-btn {
+  width: 100%; padding: 11px; border-radius: var(--r-lg);
+  border: 1px solid var(--border); background: rgba(0,0,0,0.15);
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.22s;
+}
+.t-btn:hover { background: var(--glass-h); }
+.t-btn.primary {
+  background: linear-gradient(135deg, rgba(185,127,255,0.35), rgba(120,60,210,0.35));
+  border-color: var(--border-h); color: #fff;
+  box-shadow: 0 3px 20px var(--glow);
+}
+.t-btn.primary:hover { box-shadow: 0 4px 28px rgba(185,127,255,0.45); }
+.t-row { display: flex; gap: 7px; }
+.t-row .t-btn { flex: 1; }
 
-  .day { display: none; }
-  .day.active { display: block; }
-  .day-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1.5px; margin-bottom: 2px; }
-  .day-sub { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.laps-box { width: 100%; max-height: 90px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.lap-item { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 4px 2px; border-bottom: 0.5px solid var(--border); }
+.lap-item:last-child { border-bottom: none; }
 
-  .exercise { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; transition: border-color 0.2s; }
-  .exercise.completed { border-color: #2a3a1a; background: #111a0a; }
-  .ex-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
-  .ex-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
-  .exercise.completed .ex-name { color: var(--muted); text-decoration: line-through; }
-  .ex-target { font-size: 11px; color: var(--muted); white-space: nowrap; background: var(--surface2); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+/* Tips card */
+.card-tips {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 18px 22px;
+  border-left: 2px solid rgba(185,127,255,0.5) !important;
+  border-radius: 0 var(--r-lg) var(--r-lg) 0 !important;
+}
+.tips-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.tips-body p { font-size: 12px; color: var(--muted); line-height: 1.9; }
+.tips-body strong { color: var(--text); font-weight: 500; }
 
-  .sets-row { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
-  .set-btn {
-    width: 33px; height: 33px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
-    font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer;
-    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
-  }
-  .set-btn:hover { border-color: #555; color: var(--text); }
-  .set-btn.done { background: var(--accent); border-color: var(--accent); color: #0d0d0d; font-weight: 500; }
+/* Exercises area */
+.card-exercises { padding: 22px 22px 18px; grid-column: 1 / 3; }
 
-  .weight-input {
-    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px;
-    width: 62px; height: 33px; padding: 0 8px; text-align: center;
-    transition: border-color 0.15s; margin-left: 3px;
-  }
-  .weight-input:focus { outline: none; border-color: var(--accent); }
-  .weight-input::placeholder { color: var(--muted); }
-  .weight-label { font-size: 11px; color: var(--muted); align-self: center; }
+.day-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+.day-name {
+  font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px;
+  background: linear-gradient(120deg, #fff, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.day-count { font-size: 12px; color: var(--muted); }
 
-  .reset-btn {
-    margin-top: 18px; padding: 8px 20px; background: transparent;
-    border: 1px solid var(--border); border-radius: 6px; color: var(--muted);
-    font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s;
-  }
-  .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
+.exercise-list { display: flex; flex-direction: column; gap: 8px; }
 
-  @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
-    .site-header { grid-column: 1; }
-    .sidebar { grid-row: 3; border-right: none; border-top: 1px solid var(--border); position: static; height: auto; }
-    .main { grid-row: 2; }
-    .tips-box { display: none; }
-  }
+.ex-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  transition: background 0.2s, border-color 0.2s;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 4px 12px;
+  align-items: center;
+}
+.ex-card:hover { background: rgba(255,255,255,0.07); }
+.ex-card.completed { background: var(--done); border-color: var(--done-b); }
+
+.ex-name { font-size: 14px; font-weight: 500; grid-column: 1; grid-row: 1; }
+.ex-card.completed .ex-name { color: var(--muted); text-decoration: line-through; }
+
+.ex-target {
+  font-size: 11px; color: var(--muted);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  padding: 3px 10px; border-radius: var(--r-pill);
+  grid-column: 2; grid-row: 1;
+  white-space: nowrap; align-self: start;
+}
+
+.ex-controls { grid-column: 1; grid-row: 2; display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+.ex-weight { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 6px; }
+
+.set-dot {
+  width: 32px; height: 32px; border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+  color: var(--muted);
+  font-size: 12px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.set-dot:hover { border-color: var(--accent); color: var(--accent2); background: rgba(185,127,255,0.1); }
+.set-dot.done {
+  background: linear-gradient(135deg, rgba(185,127,255,0.5), rgba(120,60,210,0.5));
+  border-color: rgba(185,127,255,0.7);
+  color: #fff; font-weight: 600;
+  box-shadow: 0 2px 10px var(--glow);
+}
+
+.kg-label { font-size: 11px; color: var(--muted); }
+.kg-input {
+  width: 58px; height: 32px; border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 12px;
+  text-align: center; padding: 0 6px;
+  transition: border-color 0.18s;
+}
+.kg-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(185,127,255,0.12); }
+.kg-input::placeholder { color: var(--muted); }
+
+/* Bottom row */
+.bento-bottom { display: flex; justify-content: flex-end; margin-top: 14px; }
+.reset-pill {
+  padding: 9px 22px; border-radius: var(--r-pill);
+  background: rgba(255,80,80,0.07);
+  border: 1px solid rgba(255,100,100,0.18);
+  color: rgba(255,150,150,0.6);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.reset-pill:hover { background: rgba(255,80,80,0.14); border-color: rgba(255,100,100,0.4); color: #ff9090; }
+
+/* Mobile */
+@media (max-width: 860px) {
+  .bento { grid-template-columns: 1fr; }
+  .card-progress { grid-column: 1; }
+  .card-timer { grid-column: 1; grid-row: auto; }
+  .card-exercises { grid-column: 1; }
+}
 </style>
 </head>
 <body>
-<div class="layout">
 
-  <header class="site-header">
-    <h1>ТРЕНИРОВКИ</h1>
-    <p>Набор массы · Дома · Гантели + Турник</p>
-  </header>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
 
-  <aside class="sidebar">
-    <div class="clock-tabs">
-      <button class="clock-tab active" onclick="switchClock('timer')">Таймер</button>
-      <button class="clock-tab" onclick="switchClock('sw')">Секундомер</button>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8040d0"/>
+      <stop offset="100%" stop-color="#dbb8ff"/>
+    </linearGradient>
+    <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9050e0"/>
+      <stop offset="100%" stop-color="#dbb8ff"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>ТРЕНИРОВКИ</h1>
+      <p>Набор массы · Дома · Гантели + Турник</p>
     </div>
-
-    <div class="clock-panel active" id="panel-timer">
-      <div class="clock-display" id="timer-display">01:30</div>
-      <div class="presets">
-        <button class="preset-btn" onclick="setTimer(60)">1 мин</button>
-        <button class="preset-btn" onclick="setTimer(90)">1:30</button>
-        <button class="preset-btn" onclick="setTimer(120)">2 мин</button>
-        <button class="preset-btn" onclick="setTimer(180)">3 мин</button>
-      </div>
-      <div class="clock-controls">
-        <button class="ctrl-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
-        <button class="ctrl-btn" onclick="resetTimer()">Сброс</button>
-      </div>
+    <div class="day-pills">
+      <button class="day-pill active" onclick="switchDay(0)">Пн · Грудь</button>
+      <button class="day-pill" onclick="switchDay(1)">Ср · Спина</button>
+      <button class="day-pill" onclick="switchDay(2)">Пт · Ноги</button>
+      <button class="day-pill" onclick="switchDay(3)">Сб · Фулл</button>
     </div>
+  </div>
 
-    <div class="clock-panel" id="panel-sw">
-      <div class="clock-display" id="sw-display">00:00</div>
-      <div class="clock-controls">
-        <button class="ctrl-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
-        <div class="ctrl-row">
-          <button class="ctrl-btn" onclick="lapSW()">Круг</button>
-          <button class="ctrl-btn" onclick="resetSW()">Сброс</button>
+  <!-- Bento -->
+  <div class="bento">
+
+    <!-- Progress card -->
+    <div class="card card-progress">
+      <div class="prog-ring-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="prog-ring-bg" cx="40" cy="40" r="34"/>
+          <circle class="prog-ring-fill" id="prog-ring" cx="40" cy="40" r="34"
+            stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+        </svg>
+        <div class="prog-center" id="prog-pct">0%</div>
+      </div>
+      <div class="prog-bar-wrap">
+        <div class="prog-text" style="margin-bottom:10px">
+          <h3 id="prog-title">Начнём тренировку</h3>
+          <p id="prog-sub" style="font-size:13px;color:var(--muted)">Отмечай подходы ниже</p>
+        </div>
+        <div class="prog-bar-track">
+          <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
+        </div>
+        <div class="prog-stats" style="margin-top:8px">
+          <div class="prog-stat">Сделано: <span id="prog-done">0</span></div>
+          <div class="prog-stat">Осталось: <span id="prog-left">0</span></div>
+          <div class="prog-stat">Всего: <span id="prog-total">0</span></div>
         </div>
       </div>
-      <div class="laps-list" id="laps-list"></div>
     </div>
 
-    <div class="sidebar-divider"></div>
-
-    <div class="tips-box">
-      <p>
-        <strong>Отдых:</strong> 90–120 сек базовые, 60 сек изоляция<br>
-        <strong>Прогрессия:</strong> +вес каждые 1–2 недели<br>
-        <strong>Белок:</strong> 1.6–2г / кг веса в день
-      </p>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="progress-wrap">
-      <div class="progress-info">
-        <span id="prog-label">Прогресс сегодня</span>
-        <span id="prog-percent">0%</span>
+    <!-- Timer card -->
+    <div class="card card-timer">
+      <div class="timer-mode">
+        <button class="timer-mode-btn active" onclick="switchClock('timer')">Таймер</button>
+        <button class="timer-mode-btn" onclick="switchClock('sw')">Секундомер</button>
       </div>
-      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+      <!-- Countdown -->
+      <div id="panel-timer" style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%">
+        <div class="timer-ring-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="tr-bg" cx="80" cy="80" r="68"/>
+            <circle class="tr-fill" id="timer-ring" cx="80" cy="80" r="68"
+              stroke-dasharray="427.3" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-center">
+            <div class="timer-digits" id="timer-display">01:30</div>
+            <div class="timer-label">отдых</div>
+          </div>
+        </div>
+        <div class="presets">
+          <button class="preset-pill" onclick="setTimer(60)">1 мин</button>
+          <button class="preset-pill" onclick="setTimer(90)">1:30</button>
+          <button class="preset-pill" onclick="setTimer(120)">2 мин</button>
+          <button class="preset-pill" onclick="setTimer(180)">3 мин</button>
+        </div>
+        <div class="timer-controls">
+          <button class="t-btn primary" id="timer-btn" onclick="toggleTimer()">Старт</button>
+          <button class="t-btn" onclick="resetTimer()">Сброс</button>
+        </div>
+      </div>
+
+      <!-- Stopwatch -->
+      <div id="panel-sw" style="display:none;flex-direction:column;align-items:center;gap:14px;width:100%">
+        <div class="timer-ring-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="tr-bg" cx="80" cy="80" r="68"/>
+            <circle class="tr-fill" id="sw-ring" cx="80" cy="80" r="68"
+              stroke-dasharray="427.3" stroke-dashoffset="427.3"/>
+          </svg>
+          <div class="timer-center">
+            <div class="timer-digits" id="sw-display" style="font-size:32px">00:00</div>
+            <div class="timer-label">секундомер</div>
+          </div>
+        </div>
+        <div class="timer-controls">
+          <button class="t-btn primary" id="sw-btn" onclick="toggleSW()">Старт</button>
+          <div class="t-row">
+            <button class="t-btn" onclick="lapSW()">Круг</button>
+            <button class="t-btn" onclick="resetSW()">Сброс</button>
+          </div>
+        </div>
+        <div class="laps-box" id="laps-list"></div>
+      </div>
+
+      <div style="width:100%;height:1px;background:var(--border)"></div>
+
+      <div style="width:100%">
+        <p style="font-size:11px;color:var(--muted);line-height:1.9">
+          <strong style="color:var(--text)">Отдых:</strong> 90–120 сек базовые, 60 сек изоляция<br>
+          <strong style="color:var(--text)">Прогрессия:</strong> +вес каждые 1–2 недели<br>
+          <strong style="color:var(--text)">Белок:</strong> 1.6–2г / кг веса в день
+        </p>
+      </div>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchDay(0)">Пн · Грудь/Трицепс</button>
-      <button class="tab" onclick="switchDay(1)">Ср · Спина/Бицепс</button>
-      <button class="tab" onclick="switchDay(2)">Пт · Ноги/Плечи</button>
-      <button class="tab" onclick="switchDay(3)">Сб · Полное тело</button>
+    <!-- Exercises card -->
+    <div class="card card-exercises">
+      <div class="day" id="day-0">
+        <div class="day-header">
+          <span class="day-name">ГРУДЬ / ТРИЦЕПС</span>
+          <span class="day-count">Понедельник · 5 упражнений</span>
+        </div>
+        <div class="exercise-list" id="exercises-0"></div>
+      </div>
+      <div class="day" id="day-1" style="display:none">
+        <div class="day-header">
+          <span class="day-name">СПИНА / БИЦЕПС</span>
+          <span class="day-count">Среда · 5 упражнений</span>
+        </div>
+        <div class="exercise-list" id="exercises-1"></div>
+      </div>
+      <div class="day" id="day-2" style="display:none">
+        <div class="day-header">
+          <span class="day-name">НОГИ / ПЛЕЧИ</span>
+          <span class="day-count">Пятница · 5 упражнений</span>
+        </div>
+        <div class="exercise-list" id="exercises-2"></div>
+      </div>
+      <div class="day" id="day-3" style="display:none">
+        <div class="day-header">
+          <span class="day-name">ПОЛНОЕ ТЕЛО</span>
+          <span class="day-count">Суббота · 5 упражнений</span>
+        </div>
+        <div class="exercise-list" id="exercises-3"></div>
+      </div>
     </div>
 
-    <div class="day active" id="day-0">
-      <div class="day-title">ГРУДЬ / ТРИЦЕПС</div>
-      <div class="day-sub">Понедельник · 5 упражнений</div>
-      <div id="exercises-0"></div>
-    </div>
-    <div class="day" id="day-1">
-      <div class="day-title">СПИНА / БИЦЕПС</div>
-      <div class="day-sub">Среда · 5 упражнений</div>
-      <div id="exercises-1"></div>
-    </div>
-    <div class="day" id="day-2">
-      <div class="day-title">НОГИ / ПЛЕЧИ</div>
-      <div class="day-sub">Пятница · 5 упражнений</div>
-      <div id="exercises-2"></div>
-    </div>
-    <div class="day" id="day-3">
-      <div class="day-title">ПОЛНОЕ ТЕЛО</div>
-      <div class="day-sub">Суббота · 5 упражнений</div>
-      <div id="exercises-3"></div>
-    </div>
+  </div>
 
-    <button class="reset-btn" onclick="resetDay()">Сбросить день</button>
-  </main>
+  <div class="bento-bottom">
+    <button class="reset-pill" onclick="resetDay()">Сбросить день</button>
+  </div>
 
 </div>
+
 <script>
 const PLAN = [
   { exercises: [
@@ -279,7 +516,7 @@ const PLAN = [
 let currentDay = 0;
 const sk = (d,e) => `wt_d${d}_e${e}`;
 const wk = (d,e) => `wt_d${d}_e${e}_w`;
-const loadSt = (d,e,n) => { const r = localStorage.getItem(sk(d,e)); return r ? JSON.parse(r) : new Array(n).fill(false); };
+const loadSt = (d,e,n) => { try { const r=localStorage.getItem(sk(d,e)); return r?JSON.parse(r):new Array(n).fill(false); } catch{ return new Array(n).fill(false); } };
 const saveSt = (d,e,s) => localStorage.setItem(sk(d,e), JSON.stringify(s));
 
 function renderDay(day) {
@@ -289,13 +526,19 @@ function renderDay(day) {
     const state = loadSt(day, ei, ex.sets);
     const weight = localStorage.getItem(wk(day,ei)) || '';
     const div = document.createElement('div');
-    div.className = 'exercise' + (state.every(Boolean) ? ' completed' : '');
+    div.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
     div.id = `ex-${day}-${ei}`;
-    let sh = '';
-    for (let s = 0; s < ex.sets; s++) sh += `<button class="set-btn${state[s]?' done':''}" onclick="toggleSet(${day},${ei},${s})">${s+1}</button>`;
-    div.innerHTML = `<div class="ex-top"><span class="ex-name">${ex.name}</span><span class="ex-target">${ex.target}</span></div>
-      <div class="sets-row">${sh}<span class="weight-label">кг:</span>
-        <input class="weight-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5" oninput="localStorage.setItem('${wk(day,ei)}',this.value)">
+    let dots = '';
+    for (let s = 0; s < ex.sets; s++)
+      dots += `<button class="set-dot${state[s]?' done':''}" onclick="toggleSet(${day},${ei},${s})">${s+1}</button>`;
+    div.innerHTML = `
+      <span class="ex-name">${ex.name}</span>
+      <span class="ex-target">${ex.target}</span>
+      <div class="ex-controls">${dots}</div>
+      <div class="ex-weight">
+        <span class="kg-label">кг</span>
+        <input class="kg-input" type="number" placeholder="0" value="${weight}" min="0" step="0.5"
+          oninput="localStorage.setItem('${wk(day,ei)}',this.value)">
       </div>`;
     c.appendChild(div);
   });
@@ -306,24 +549,32 @@ function toggleSet(day, ei, s) {
   const state = loadSt(day, ei, PLAN[day].exercises[ei].sets);
   state[s] = !state[s]; saveSt(day, ei, state);
   const el = document.getElementById(`ex-${day}-${ei}`);
-  el.className = 'exercise' + (state.every(Boolean) ? ' completed' : '');
-  el.querySelectorAll('.set-btn').forEach((b,i) => b.className = 'set-btn' + (state[i] ? ' done' : ''));
+  el.className = 'ex-card' + (state.every(Boolean) ? ' completed' : '');
+  el.querySelectorAll('.set-dot').forEach((b,i) => b.className = 'set-dot'+(state[i]?' done':''));
   updateProgress(day);
 }
 
 function updateProgress(day) {
-  let total = 0, done = 0;
-  PLAN[day].exercises.forEach((ex,ei) => { const s = loadSt(day,ei,ex.sets); total += ex.sets; done += s.filter(Boolean).length; });
-  const pct = total > 0 ? Math.round(done/total*100) : 0;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-percent').textContent = pct + '%';
-  document.getElementById('prog-label').textContent = `${done} / ${total} подходов`;
+  let total=0, done=0;
+  PLAN[day].exercises.forEach((ex,ei)=>{
+    const s=loadSt(day,ei,ex.sets); total+=ex.sets; done+=s.filter(Boolean).length;
+  });
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  const circ = 213.6;
+  document.getElementById('prog-ring').style.strokeDashoffset = circ - (circ * pct/100);
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-done').textContent = done;
+  document.getElementById('prog-left').textContent = total-done;
+  document.getElementById('prog-total').textContent = total;
+  document.getElementById('prog-title').textContent = pct===100 ? '🎉 Тренировка завершена!' : pct>0 ? `${pct}% выполнено` : 'Начнём тренировку';
+  document.getElementById('prog-sub').textContent = pct===100 ? 'Отличная работа!' : `${done} из ${total} подходов`;
 }
 
 function switchDay(day) {
   currentDay = day;
-  document.querySelectorAll('.day').forEach((d,i) => d.classList.toggle('active', i===day));
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===day));
+  document.querySelectorAll('.day').forEach((d,i) => d.style.display = i===day?'block':'none');
+  document.querySelectorAll('.day-pill').forEach((t,i) => t.classList.toggle('active', i===day));
   updateProgress(day);
 }
 
@@ -338,14 +589,28 @@ updateProgress(0);
 
 // Clock
 function switchClock(mode) {
-  document.querySelectorAll('.clock-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='timer')||(i===1&&mode==='sw')));
-  document.getElementById('panel-timer').classList.toggle('active', mode==='timer');
-  document.getElementById('panel-sw').classList.toggle('active', mode==='sw');
+  document.querySelectorAll('.timer-mode-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&mode==='timer')||(i===1&&mode==='sw')));
+  document.getElementById('panel-timer').style.display = mode==='timer'?'flex':'none';
+  document.getElementById('panel-sw').style.display = mode==='sw'?'flex':'none';
 }
 
+// Timer
+const CIRC_T = 427.3;
 let timerTotal=90, timerLeft=90, timerInt=null, timerOn=false;
 const fmt = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-function setTimer(s) { resetTimer(); timerTotal=s; timerLeft=s; document.getElementById('timer-display').textContent=fmt(s); document.getElementById('timer-display').className='clock-display'; }
+
+function updateTimerRing() {
+  const offset = CIRC_T - (CIRC_T * timerLeft/timerTotal);
+  document.getElementById('timer-ring').style.strokeDashoffset = offset;
+}
+
+function setTimer(s) {
+  resetTimer(); timerTotal=s; timerLeft=s;
+  document.getElementById('timer-display').textContent=fmt(s);
+  document.getElementById('timer-display').className='timer-digits';
+  updateTimerRing();
+}
+
 function toggleTimer() {
   if (timerOn) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; return; }
   if (timerLeft<=0) timerLeft=timerTotal;
@@ -354,21 +619,49 @@ function toggleTimer() {
     timerLeft--;
     const d = document.getElementById('timer-display');
     d.textContent = fmt(timerLeft);
-    d.className = 'clock-display'+(timerLeft<=10&&timerLeft>0?' warning':timerLeft<=0?' done':'');
+    d.className = 'timer-digits'+(timerLeft<=10&&timerLeft>0?' warning':timerLeft<=0?' done':'');
+    updateTimerRing();
     if (timerLeft<=0) { clearInterval(timerInt); timerOn=false; document.getElementById('timer-btn').textContent='Старт'; }
   }, 1000);
 }
-function resetTimer() { clearInterval(timerInt); timerOn=false; timerLeft=timerTotal; document.getElementById('timer-display').textContent=fmt(timerTotal); document.getElementById('timer-display').className='clock-display'; document.getElementById('timer-btn').textContent='Старт'; }
 
-let swMs=0, swInt=null, swOn=false, swLaps=[];
-const fmtSW = ms => { const s=Math.floor(ms/1000),m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'.'+String(Math.floor((ms%1000)/10)).padStart(2,'0'); };
-function toggleSW() {
-  if (swOn) { clearInterval(swInt); swOn=false; document.getElementById('sw-btn').textContent='Старт'; return; }
-  const start=Date.now()-swMs; swOn=true; document.getElementById('sw-btn').textContent='Пауза';
-  swInt=setInterval(()=>{ swMs=Date.now()-start; document.getElementById('sw-display').textContent=fmtSW(swMs); },30);
+function resetTimer() {
+  clearInterval(timerInt); timerOn=false; timerLeft=timerTotal;
+  document.getElementById('timer-display').textContent=fmt(timerTotal);
+  document.getElementById('timer-display').className='timer-digits';
+  document.getElementById('timer-btn').textContent='Старт';
+  updateTimerRing();
 }
-function lapSW() { if(!swOn&&swMs===0) return; swLaps.unshift({n:swLaps.length+1,t:fmtSW(swMs)}); document.getElementById('laps-list').innerHTML=swLaps.map(l=>`<div class="lap-row"><span>Круг ${l.n}</span><span>${l.t}</span></div>`).join(''); }
-function resetSW() { clearInterval(swInt); swOn=false; swMs=0; swLaps=[]; document.getElementById('sw-display').textContent='00:00'; document.getElementById('sw-btn').textContent='Старт'; document.getElementById('laps-list').innerHTML=''; }
+
+// Stopwatch
+let swMs=0, swInt=null, swOn=false, swLaps=[], swLastLap=0;
+const fmtSW = ms => { const s=Math.floor(ms/1000),m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'.'+String(Math.floor((ms%1000)/10)).padStart(2,'0'); };
+
+function toggleSW() {
+  if (swOn) { clearInterval(swInt); swOn=false; document.getElementById('sw-btn').textContent='Продолжить'; return; }
+  const start=Date.now()-swMs; swOn=true; document.getElementById('sw-btn').textContent='Пауза';
+  swInt=setInterval(()=>{
+    swMs=Date.now()-start;
+    document.getElementById('sw-display').textContent=fmtSW(swMs);
+    const cycleMs = 60000;
+    document.getElementById('sw-ring').style.strokeDashoffset = CIRC_T - (CIRC_T * ((swMs%cycleMs)/cycleMs));
+  },30);
+}
+
+function lapSW() {
+  if(!swOn&&swMs===0) return;
+  const lapTime = swMs - swLastLap; swLastLap = swMs;
+  swLaps.unshift({n:swLaps.length+1, t:fmtSW(swMs), lap:fmtSW(lapTime)});
+  document.getElementById('laps-list').innerHTML = swLaps.map(l=>`<div class="lap-item"><span>Круг ${l.n}</span><span style="color:var(--muted)">${l.lap}</span><span>${l.t}</span></div>`).join('');
+}
+
+function resetSW() {
+  clearInterval(swInt); swOn=false; swMs=0; swLaps=[]; swLastLap=0;
+  document.getElementById('sw-display').textContent='00:00';
+  document.getElementById('sw-btn').textContent='Старт';
+  document.getElementById('laps-list').innerHTML='';
+  document.getElementById('sw-ring').style.strokeDashoffset=CIRC_T;
+}
 </script>
 </body>
 </html>
