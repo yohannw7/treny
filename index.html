@@ -44,6 +44,21 @@ body {
 .blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: radial-gradient(ellipse, rgba(160,80,240,0.22) 0%, transparent 70%); }
 .blob-3 { width: 300px; height: 300px; top: 50%; left: 55%; background: radial-gradient(ellipse, rgba(185,127,255,0.1) 0%, transparent 65%); }
 
+/* Background symbols */
+.bg-symbols { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bg-sym {
+  position: absolute;
+  font-family: 'Bebas Neue', sans-serif;
+  color: rgba(185,127,255,0.055);
+  user-select: none;
+  line-height: 1;
+  animation: symFloat ease-in-out infinite;
+}
+@keyframes symFloat {
+  0%,100% { transform: translateY(0) rotate(var(--r0)); }
+  50%      { transform: translateY(-16px) rotate(var(--r1)); }
+}
+
 /* Page */
 .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 
@@ -316,6 +331,39 @@ body {
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
+
+<div class="bg-symbols" id="bgSymbols"></div>
+
+<script>
+(function(){
+  const syms = ['💪','⚡','✦','◈','⊕','✗','▲','◇','⬡','✦','⊞','✚','◉','⌬','⊿'];
+  const container = document.getElementById('bgSymbols');
+  const count = 28;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className = 'bg-sym';
+    const sym = syms[Math.floor(Math.random()*syms.length)];
+    const size = 18 + Math.random()*90;
+    const x = Math.random()*100;
+    const y = Math.random()*100;
+    const dur = 5 + Math.random()*8;
+    const delay = -Math.random()*10;
+    const r0 = (Math.random()*40-20).toFixed(1)+'deg';
+    const r1 = (Math.random()*40-20).toFixed(1)+'deg';
+    const op = (0.03 + Math.random()*0.07).toFixed(3);
+    el.textContent = sym;
+    el.style.cssText = `
+      left:${x}%; top:${y}%;
+      font-size:${size}px;
+      opacity:${op};
+      --r0:${r0}; --r1:${r1};
+      animation-duration:${dur}s;
+      animation-delay:${delay}s;
+    `;
+    container.appendChild(el);
+  }
+})();
+</script>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
